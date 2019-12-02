@@ -32,38 +32,51 @@ public class MonitorConfig extends AbstractConfig {
     private static final long serialVersionUID = -1184681514659198203L;
 
     /**
+     * 监控中心协议，如果值是registry，它将从注册中心搜索监控中心地址，
      * The protocol of the monitor, if the value is registry, it will search the monitor address from the registry center,
+     * 否则，它将直接连接到监控中心
      * otherwise, it will directly connect to the monitor center
      */
     private String protocol;
 
     /**
+     * 监控中心地址
      * The monitor address
      */
     private String address;
 
     /**
+     * 监控中心用户名
      * The monitor user name
      */
     private String username;
 
     /**
+     * 监控中心密码
      * The password
      */
     private String password;
-
+    /**
+     * 监控中心组
+     */
     private String group;
-
+    /**
+     * 监控中心版本号
+     */
     private String version;
-
+    /**
+     * 监控中间间隔
+     */
     private String interval;
 
     /**
+     * 自定义参数
      * customized parameters
      */
     private Map<String, String> parameters;
 
     /**
+     * 是否默认
      * If it's default
      */
     private Boolean isDefault;

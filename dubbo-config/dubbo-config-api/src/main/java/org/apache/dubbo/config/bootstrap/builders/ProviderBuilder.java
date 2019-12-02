@@ -26,116 +26,139 @@ import org.apache.dubbo.config.ProviderConfig;
 public class ProviderBuilder extends AbstractServiceBuilder<ProviderConfig, ProviderBuilder> {
 
     /**
+     * 服务ip地址（当有多个网卡可用时使用）
      * Service ip addresses (used when there are multiple network cards available)
      */
     private String host;
 
     /**
+     * 服务端口
      * Service port
      */
     private Integer port;
 
     /**
+     * 上下文地址
      * Context path
      */
     private String contextpath;
 
     /**
+     * 线程池
      * Thread pool
      */
     private String threadpool;
 
     /**
+     * 线程池线程数量（固定大小）
      * Thread pool size (fixed size)
      */
     private Integer threads;
 
     /**
+     * IO线程池线程数量（固定大小）
      * IO thread pool size (fixed size)
      */
     private Integer iothreads;
 
     /**
+     * 线程池队列长度（固定大小）
      * Thread pool queue length
      */
     private Integer queues;
 
     /**
+     * 最大可接受连接数
      * Max acceptable connections
      */
     private Integer accepts;
 
     /**
+     * 协议编解码器
      * Protocol codec
      */
     private String codec;
 
     /**
+     * 序列化编码
      * The serialization charset
      */
     private String charset;
 
     /**
+     * 有效载荷最大长度
      * Payload max length
      */
     private Integer payload;
 
     /**
+     * 缓冲区大小
      * The network io buffer size
      */
     private Integer buffer;
 
     /**
+     * 转换器
      * Transporter
      */
     private String transporter;
 
     /**
+     * 信息如何交换
      * How information gets exchanged
      */
     private String exchanger;
 
     /**
+     * 线程调度器
      * Thread dispatching mode
      */
     private String dispatcher;
 
     /**
+     * 网络
      * Networker
      */
     private String networker;
 
     /**
+     * 协议的服务器端实现模型
      * The server-side implementation model of the protocol
      */
     private String server;
 
     /**
+     * 协议的客户端实现模型
      * The client-side implementation model of the protocol
      */
     private String client;
 
     /**
+     * 支持的telnet命令，用逗号分隔。
      * Supported telnet commands, separated with comma.
      */
     private String telnet;
 
     /**
+     * 命令行提示
      * Command line prompt
      */
     private String prompt;
 
     /**
+     * 状态检查
      * Status check
      */
     private String status;
 
     /**
+     * 优雅停机等待时间
      * Wait time when stop
      */
     private Integer wait;
 
     /**
+     * 是否使用默认协议
      * Whether to use the default protocol
      */
     private Boolean isDefault;

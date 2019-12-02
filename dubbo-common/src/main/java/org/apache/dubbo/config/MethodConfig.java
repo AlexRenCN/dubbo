@@ -42,81 +42,97 @@ public class MethodConfig extends AbstractMethodConfig {
     private static final long serialVersionUID = 884908855422675941L;
 
     /**
+     * 方法名
      * The method name
      */
     private String name;
 
     /**
+     * FIXME 节点？？
      * Stat
      */
     private Integer stat;
 
     /**
+     * 是否重试
      * Whether to retry
      */
     private Boolean retry;
 
     /**
+     * 是否高可用
      * If it's reliable
      */
     private Boolean reliable;
 
     /**
+     * 方法调用最大线程数
      * Thread limits for method invocations
      */
     private Integer executes;
 
     /**
+     * 是否过时
      * If it's deprecated
      */
     private Boolean deprecated;
 
     /**
+     * 是否使用同一个提供者
      * Whether to enable sticky
      */
     private Boolean sticky;
 
     /**
+     * 是否需要返回值
      * Whether need to return
      */
     private Boolean isReturn;
 
     /**
+     * 执行前拦截
      * Callback instance when async-call is invoked
      */
     private Object oninvoke;
 
     /**
+     * 方法执行前拦截
      * Callback method when async-call is invoked
      */
     private String oninvokeMethod;
 
     /**
+     * 执行后拦截
      * Callback instance when async-call is returned
      */
     private Object onreturn;
 
     /**
+     * 方法执行后拦截
      * Callback method when async-call is returned
      */
     private String onreturnMethod;
 
     /**
+     * 异常拦截
      * Callback instance when async-call has exception thrown
      */
     private Object onthrow;
 
     /**
+     * 方法异常拦截
      * Callback method when async-call has exception thrown
      */
     private String onthrowMethod;
 
     /**
+     * 方法参数
      * The method arguments
      */
     private List<ArgumentConfig> arguments;
 
     /**
+     * 这些属性来自MethodConfig的父配置模块，它们既不会直接从xml或API收集，也不会传递到url
      * These properties come from MethodConfig's parent Config module, they will neither be collected directly from xml or API nor be delivered to url
      */
     private String service;

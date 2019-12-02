@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 模块信息
  * The module info
  *
  * @export
@@ -33,36 +34,43 @@ public class ModuleConfig extends AbstractConfig {
     private static final long serialVersionUID = 5508512956753757169L;
 
     /**
+     * 模块名称
      * Module name
      */
     private String name;
 
     /**
+     * 模块版本
      * Module version
      */
     private String version;
 
     /**
+     * 模块拥有者
      * Module owner
      */
     private String owner;
 
     /**
+     * 模块拥有组织
      * Module's organization
      */
     private String organization;
 
     /**
+     * 注册中心
      * Registry centers
      */
     private List<RegistryConfig> registries;
 
     /**
+     * 监控中心
      * Monitor center
      */
     private MonitorConfig monitor;
 
     /**
+     * 是否默认
      * If it's default
      */
     private Boolean isDefault;

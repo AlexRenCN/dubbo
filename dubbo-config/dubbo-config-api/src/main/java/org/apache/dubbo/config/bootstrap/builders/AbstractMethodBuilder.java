@@ -70,7 +70,7 @@ public abstract class AbstractMethodBuilder<T extends AbstractMethodConfig, B ex
      * 当服务无法执行时调用的模拟类的名称
      * The name of mock class which gets called when a service fails to execute
      *
-     * 注意：mock在生产者服务中不支持，当远程服务调用后发生非业务异常时执行模拟
+     * 注意：mock在提供者服务中不支持，当远程服务调用后发生非业务异常时执行模拟
      * note that: the mock doesn't support on the provider side，and the mock is executed when a non-business exception
      * occurs after a remote service call
      */

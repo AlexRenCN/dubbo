@@ -68,7 +68,7 @@ public abstract class AbstractInterfaceBuilder<T extends AbstractInterfaceConfig
     protected String cluster;
 
     /**
-     * 生产者提供服务或者消费者消费服务时使用的拦截器
+     * 提供者提供服务或者消费者消费服务时使用的拦截器
      * The {@link Filter} when the provider side exposed a service or the customer side references a remote service used,
      * 如果有多个，可以用逗号分隔
      * if there are more than one, you can use commas to separate them
@@ -76,7 +76,7 @@ public abstract class AbstractInterfaceBuilder<T extends AbstractInterfaceConfig
     protected String filter;
 
     /**
-     * 生产者提供服务或者消费者消费服务时使用的监听器
+     * 提供者提供服务或者消费者消费服务时使用的监听器
      * The Listener when the provider side exposes a service or the customer side references a remote service used
      * 如果有多个，可以用逗号分隔
      * if there are more than one, you can use commas to separate them
@@ -84,7 +84,7 @@ public abstract class AbstractInterfaceBuilder<T extends AbstractInterfaceConfig
     protected String listener;
 
     /**
-     * 生产者的所有者
+     * 提供者的所有者
      * The owner of the service providers
      */
     protected String owner;
@@ -96,7 +96,7 @@ public abstract class AbstractInterfaceBuilder<T extends AbstractInterfaceConfig
     protected Integer connections;
 
     /**
-     * 生产者提供接口的层级（选项有biz,dao之类之类的）
+     * 提供者提供接口的层级（选项有biz,dao之类之类的）
      * The layer of service providers
      */
     protected String layer;

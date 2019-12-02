@@ -25,6 +25,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_VERSION_KE
 import static org.apache.dubbo.config.Constants.PROTOCOLS_SUFFIX;
 
 /**
+ * 协议配置
  * ProtocolConfig
  *
  * @export
@@ -34,164 +35,201 @@ public class ProtocolConfig extends AbstractConfig {
     private static final long serialVersionUID = 6913423882496634749L;
 
     /**
+     * 协议名称
      * Protocol name
      */
     private String name;
 
     /**
+     * 服务ip地址（当有多个网卡可用时）
      * Service ip address (when there are multiple network cards available)
      */
     private String host;
 
     /**
+     * 服务端口
      * Service port
      */
     private Integer port;
 
     /**
+     * 上下文路径
      * Context path
      */
     private String contextpath;
 
     /**
+     * 线程池
      * Thread pool
      */
     private String threadpool;
 
     /**
+     * 线程池核心线程数量
      * Thread pool core thread size
      */
     private Integer corethreads;
 
     /**
+     * 线程池线程线程数量（固定线程）
      * Thread pool size (fixed size)
      */
     private Integer threads;
 
     /**
+     * IO线程池线程数量（固定线程）
      * IO thread pool size (fixed size)
      */
     private Integer iothreads;
 
     /**
+     * 线程池的队列长度
      * Thread pool's queue length
      */
     private Integer queues;
 
     /**
+     * 最大可接受连接数
      * Max acceptable connections
      */
     private Integer accepts;
 
     /**
+     * 协议编解码器
      * Protocol codec
      */
     private String codec;
 
     /**
+     * 协议序列化器
      * Serialization
      */
     private String serialization;
 
     /**
+     * 协议编码
      * Charset
      */
     private String charset;
 
     /**
+     * 有效载荷最大长度
      * Payload max length
      */
     private Integer payload;
 
     /**
+     * 缓冲区大小
      * Buffer size
      */
     private Integer buffer;
 
     /**
+     * 心跳间隔
      * Heartbeat interval
      */
     private Integer heartbeat;
 
     /**
+     * 日志级别
      * Access log
      */
     private String accesslog;
 
     /**
+     * 转换器
      * Transfort
      */
     private String transporter;
 
     /**
+     * 信息如何交换
      * How information is exchanged
      */
     private String exchanger;
 
     /**
+     * 线程调度器
      * Thread dispatch mode
      */
     private String dispatcher;
 
     /**
+     * 网络
      * Networker
      */
     private String networker;
 
     /**
+     * 实现类
      * Sever impl
      */
     private String server;
 
     /**
+     * 客户端实现
      * Client impl
      */
     private String client;
 
     /**
+     * 支持的telnet命令，用逗号分隔。
      * Supported telnet commands, separated with comma.
      */
     private String telnet;
 
     /**
+     * 命令行提示
      * Command line prompt
      */
     private String prompt;
 
     /**
+     * 状态检查
      * Status check
      */
     private String status;
 
     /**
+     * 是否注册
      * Whether to register
      */
     private Boolean register;
 
     /**
+     * 是否为持久连接
      * whether it is a persistent connection
      */
     //TODO add this to provider config
     private Boolean keepAlive;
 
+    /**
+     * 优化器
+     */
     // TODO add this to provider config
     private String optimizer;
 
     /**
+     * 扩展
      * The extension
      */
     private String extension;
 
     /**
+     * 自定义参数
      * The customized parameters
      */
     private Map<String, String> parameters;
 
     /**
+     * 是否默认
      * If it's default
      */
     private Boolean isDefault;
 
+    /**
+     * 是否支持SSL
+     */
     private Boolean sslEnabled;
 
     public ProtocolConfig() {

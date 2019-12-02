@@ -30,36 +30,43 @@ import java.util.List;
  */
 public class ModuleBuilder extends AbstractBuilder<ModuleConfig, ModuleBuilder> {
     /**
+     * 模块名称
      * Module name
      */
     private String name;
 
     /**
+     * 模块版本
      * Module version
      */
     private String version;
 
     /**
+     * 模块拥有者
      * Module owner
      */
     private String owner;
 
     /**
+     * 模块拥有组织
      * Module's organization
      */
     private String organization;
 
     /**
+     * 注册中心
      * Registry centers
      */
     private List<RegistryConfig> registries;
 
     /**
+     * 监控中心
      * Monitor center
      */
     private MonitorConfig monitor;
 
     /**
+     * 是否默认
      * If it's default
      */
     private Boolean isDefault;

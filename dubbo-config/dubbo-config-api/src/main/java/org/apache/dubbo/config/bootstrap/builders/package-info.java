@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 /**
+ * 这种写法可以在java doc类似API里生成对应包的信息
  * A bunch of builder classes to facilitate programming of raw API.
  * TODO, these are experimental APIs and are possible to change at any time before marked as production.
  */
