@@ -26,6 +26,7 @@
     <artifactId>dubbo-remoting</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
+    <!--远程通信模块：提供通用的客户端和服务端的通讯功能。-->
     <description>The remoting module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

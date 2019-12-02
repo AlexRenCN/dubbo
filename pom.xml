@@ -152,6 +152,7 @@
     </modules>
 
     <dependencyManagement>
+        <!--以引入pom的形式，将三方引用版本号统一管理在该pom中-->
         <dependencies>
             <dependency>
                 <groupId>org.apache.dubbo</groupId>

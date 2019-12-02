@@ -25,6 +25,7 @@
     <artifactId>dubbo</artifactId>
     <packaging>jar</packaging>
     <name>dubbo-all</name>
+    <!--Dubbo All Pom ，定义了 Dubbo 的打包脚本。-->
     <description>The all in one project of dubbo</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

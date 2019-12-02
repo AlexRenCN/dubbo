@@ -29,67 +29,81 @@ import java.util.Map;
 public abstract class AbstractMethodBuilder<T extends AbstractMethodConfig, B extends AbstractMethodBuilder<T, B>>
         extends AbstractBuilder<T, B> {
     /**
+     * 远程调用超时时间（毫秒）
      * The timeout for remote invocation in milliseconds
      */
     protected Integer timeout;
 
     /**
+     * 重试次数
      * The retry times
      */
     protected Integer retries;
 
     /**
+     * 调用最大并发数
      * max concurrent invocations
      */
     protected Integer actives;
 
     /**
+     * 负载均衡
      * The load balance
      */
     protected String loadbalance;
 
     /**
+     * 是否异步
      * Whether to async
+     * 注意：这是一种不可靠的异步机制，它忽略返回值并且不阻塞线程。（相当于扔掉了结果）
      * note that: it is an unreliable asynchronism that ignores return values and does not block threads.
      */
     protected Boolean async;
 
     /**
+     * 是否确认异步发送
      * Whether to ack async-sent
      */
     protected Boolean sent;
 
     /**
+     * 当服务无法执行时调用的模拟类的名称
      * The name of mock class which gets called when a service fails to execute
      *
+     * 注意：mock在生产者服务中不支持，当远程服务调用后发生非业务异常时执行模拟
      * note that: the mock doesn't support on the provider side，and the mock is executed when a non-business exception
      * occurs after a remote service call
      */
     protected String mock;
 
     /**
+     * 合并
      * Merger
      */
     protected String merger;
 
     /**
+     * 通过调用的参数作为key缓存返回的结果，有下面几种选项：lru，threadlocal，jcache，etc
      * Cache the return result with the call parameter as key, the following options are available: lru, threadlocal,
      * jcache, etc.
      */
     protected String cache;
 
     /**
+     * 是否启用JSR303标准注释验证，如果启用，方法参数注释将被验证
      * Whether JSR303 standard annotation validation is enabled or not, if enabled, annotations on method parameters will
      * be validated
      */
     protected String validation;
 
     /**
+     * 自定义参数
      * The customized parameters
      */
     protected Map<String, String> parameters;
 
     /**
+     * 并发调用服务器个数
      * Forks for forking cluster
      */
     protected Integer forks;

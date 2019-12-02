@@ -32,41 +32,49 @@ public abstract class AbstractServiceBuilder<T extends AbstractServiceConfig, B 
         extends AbstractInterfaceBuilder<T, B> {
 
     /**
+     * 服务版本号
      * The service version
      */
     protected String version;
 
     /**
+     * 服务所属组
      * The service group
      */
     protected String group;
 
     /**
+     * 服务是否已经被弃用
      * whether the service is deprecated
      */
     protected Boolean deprecated;
 
     /**
+     * 注册服务延迟
      * The time delay register service (milliseconds)
      */
     protected Integer delay;
 
     /**
+     * 是否导出服务
      * Whether to export the service
      */
     protected Boolean export;
 
     /**
+     * 服务权重
      * The service weight
      */
     protected Integer weight;
 
     /**
+     * 文件中心
      * Document center
      */
     protected String document;
 
     /**
+     * 是否在注册中心注册为动态服务，如果设置为false，服务注册后状态为禁用，需要手工启用；如果要禁用该服务，还需要手动处理
      * Whether to register as a dynamic service or not on register center, it the value is false, the status will be disabled
      * after the service registered,and it needs to be enabled manually; if you want to disable the service, you also need
      * manual processing
@@ -74,35 +82,44 @@ public abstract class AbstractServiceBuilder<T extends AbstractServiceConfig, B 
     protected Boolean dynamic;
 
     /**
+     * 是否使用token令牌
      * Whether to use token
      */
     protected String token;
 
     /**
+     * 是否将访问日志导出到日志
      * Whether to export access logs to logs
      */
     protected String accesslog;
 
     /**
+     * 服务将导出的协议列表
      * The protocol list the service will export with
      */
     protected List<ProtocolConfig> protocols;
     protected String protocolIds;
 
     // max allowed execute times
+    /**
+     * 最大允许执行的个数
+     */
     private Integer executes;
 
     /**
+     * 是否注册
      * Whether to register
      */
     private Boolean register;
 
     /**
+     * 预热次数（通过jvm的优化实现对方法预热）
      * Warm up period
      */
     private Integer warmup;
 
     /**
+     * 序列化类型
      * The serialization type
      */
     private String serialization;

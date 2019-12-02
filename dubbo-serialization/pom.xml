@@ -25,6 +25,7 @@
     <artifactId>dubbo-serialization</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
+    <!--序列化-->
     <description>The serialization module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

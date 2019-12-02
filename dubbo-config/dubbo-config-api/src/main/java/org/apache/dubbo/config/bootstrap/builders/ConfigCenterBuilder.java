@@ -26,21 +26,57 @@ import java.util.Map;
  * @since 2.7
  */
 public class ConfigCenterBuilder extends AbstractBuilder<ConfigCenterConfig, ConfigCenterBuilder> {
-
+    /**
+     * 协议
+     */
     private String protocol;
+    /**
+     * 地址
+     */
     private String address;
+    /**
+     * 集群
+     */
     private String cluster;
+    /**
+     * 命名空间
+     */
     private String namespace = "dubbo";
+    /**
+     * 配置中心组
+     */
     private String group = "dubbo";
+    /**
+     * 用户名
+     */
     private String username;
+    /**
+     * 密码
+     */
     private String password;
+    /**
+     * 超时时间
+     */
     private Long timeout = 3000L;
+    /**
+     * 配置是不是最高优先级
+     */
     private Boolean highestPriority = true;
+    /**
+     * 是否检查链接
+     */
     private Boolean check = true;
-
+    /**
+     * 全局配置文件名
+     */
     private String configFile = "dubbo.properties";
+    /**
+     * 应用配置文件名
+     */
     private String appConfigFile;
-
+    /**
+     * 自定义参数
+     */
     private Map<String, String> parameters;
 
     public ConfigCenterBuilder protocol(String protocol) {

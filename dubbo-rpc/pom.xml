@@ -25,6 +25,7 @@
     <artifactId>dubbo-rpc</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
+    <!--远程调用模块：抽象各种协议，以及动态代理，只包含一对一的调用，不关心集群的管理。-->
     <description>The rpc module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

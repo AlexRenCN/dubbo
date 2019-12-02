@@ -25,6 +25,7 @@
     <artifactId>dubbo-demo</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
+    <!--快速启动示例。-->
     <description>The demo module of dubbo project</description>
     <properties>
         <skip_maven_deploy>true</skip_maven_deploy>

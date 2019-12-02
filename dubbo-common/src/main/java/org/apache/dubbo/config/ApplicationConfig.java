@@ -47,6 +47,7 @@ import static org.apache.dubbo.config.Constants.TEST_ENVIRONMENT;
 
 
 /**
+ * 应用信息
  * The application info
  *
  * @export
@@ -57,92 +58,113 @@ public class ApplicationConfig extends AbstractConfig {
     private static final long serialVersionUID = 5508512956753757169L;
 
     /**
+     * 应用名称
      * Application name
      */
     private String name;
 
     /**
+     * 应用版本号
      * The application version
      */
     private String version;
 
     /**
+     * 应用所属者
      * Application owner
      */
     private String owner;
 
     /**
+     * 应用所属组织
      * Application's organization (BU)
      */
     private String organization;
 
     /**
+     * 架构层
      * Architecture layer
      */
     private String architecture;
 
     /**
+     * 环境，例如开发、测试或生产
      * Environment, e.g. dev, test or production
      */
     private String environment;
 
     /**
+     * Java编译器
      * Java compiler
      */
     private String compiler;
 
     /**
+     * 日志等级
      * The type of the log access
      */
     private String logger;
 
     /**
+     * 注册中心
      * Registry centers
      */
     private List<RegistryConfig> registries;
+    /**
+     * 注册中心id
+     */
     private String registryIds;
 
     /**
+     * 监控中心
      * Monitor center
      */
     private MonitorConfig monitor;
 
     /**
+     * 是否默认
      * Is default or not
      */
     private Boolean isDefault;
 
     /**
+     * 保存线程快照的目录
      * Directory for saving thread dump
      */
     private String dumpDirectory;
 
     /**
+     * 是否启用qos（Quality of Service，服务质量）
      * Whether to enable qos or not
      */
     private Boolean qosEnable;
 
     /**
+     * 要监听服务质量的服务主机
      * The qos host to listen
      */
     private String qosHost;
 
     /**
+     * 要监听服务质量的服务端口
      * The qos port to listen
      */
     private Integer qosPort;
 
     /**
+     * 是否接受国外ip
      * Should we accept foreign ip or not?
      */
     private Boolean qosAcceptForeignIp;
 
     /**
+     * 自定义参数
      * Customized parameters
      */
     private Map<String, String> parameters;
 
     /**
+     * 配置优雅停机
      * Config the shutdown.wait
      */
     private String shutwait;
@@ -150,6 +172,7 @@ public class ApplicationConfig extends AbstractConfig {
     private String hostname;
 
     /**
+     * 元数据类型，本地或者远程，如果选择远程，需要进一步指定元数据中心
      * Metadata type, local or remote, if choose remote, you need to further specify metadata center.
      */
     private String metadataType;

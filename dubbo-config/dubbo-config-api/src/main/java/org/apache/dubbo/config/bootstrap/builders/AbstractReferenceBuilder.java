@@ -28,6 +28,7 @@ public abstract class AbstractReferenceBuilder<T extends AbstractReferenceConfig
         extends AbstractInterfaceBuilder<T, B> {
 
     /**
+     * 检查服务提供商是否存在，如果服务提供商不存在，则会更早的失败
      * Check if service provider exists, if not exists, it will be fast fail
      */
     protected Boolean check;
@@ -38,30 +39,38 @@ public abstract class AbstractReferenceBuilder<T extends AbstractReferenceConfig
     protected Boolean init;
 
     /**
+     * 是否使用通用接口
      * Whether to use generic interface
      */
     protected String generic;
 
     /**
+     * 是否从当前JVM中查找引用的实例
      * Whether to find reference's instance from the current JVM
      */
     protected Boolean injvm;
 
     /**
+     * 懒加载创建连接
      * Lazy create connection
      */
     protected Boolean lazy;
 
+    /**
+     * 重连
+     */
     protected String reconnect;
 
     protected Boolean sticky;
 
     /**
+     * 客户端将参考的远程服务版本
      * The remote service version the customer side will reference
      */
     protected String version;
 
     /**
+     * 客户端将参考的远程服务所属组
      * The remote service group the customer side will reference
      */
     protected String group;

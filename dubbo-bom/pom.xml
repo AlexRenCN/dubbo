@@ -30,6 +30,7 @@
     <packaging>pom</packaging>
 
     <name>dubbo-bom</name>
+    <!--Maven BOM(Bill Of Materials) ，统一定义了 Dubbo 的版本号：-->
     <description>Dubbo dependencies BOM</description>
     <url>https://github.com/apache/dubbo</url>
     <inceptionYear>2011</inceptionYear>

@@ -32,24 +32,81 @@ import static org.apache.dubbo.config.Constants.PRODUCTION_ENVIRONMENT;
  * @since 2.7
  */
 public class ApplicationBuilder extends AbstractBuilder<ApplicationConfig, ApplicationBuilder> {
+    /**
+     * 应用名称
+     */
     private String name;
+    /**
+     * 元数据
+     */
     private String metadata;
+    /**
+     * 应用版本号
+     */
     private String version;
+    /**
+     * 应用所属者
+     */
     private String owner;
+    /**
+     * 应用所属组织
+     */
     private String organization;
+    /**
+     * 架构层
+     */
     private String architecture;
+    /**
+     * 环境，例如开发、测试或生产
+     */
     private String environment = PRODUCTION_ENVIRONMENT;
+    /**
+     * Java编译器
+     */
     private String compiler;
+    /**
+     * 日志等级
+     */
     private String logger;
+    /**
+     * 注册中心
+     */
     private List<RegistryConfig> registries;
+    /**
+     * 注册中心id
+     */
     private String registryIds;
+    /**
+     * 监控中心
+     */
     private MonitorConfig monitor;
+    /**
+     * 是否默认
+     */
     private Boolean isDefault;
+    /**
+     * 保存线程快照的目录
+     */
     private String dumpDirectory;
+    /**
+     * 是否启用qos（Quality of Service，服务质量）
+     */
     private Boolean qosEnable;
+    /**
+     * 要监听服务质量的服务端口
+     */
     private Integer qosPort;
+    /**
+     * 是否接受国外ip
+     */
     private Boolean qosAcceptForeignIp;
+    /**
+     * 自定义参数
+     */
     private Map<String, String> parameters;
+    /**
+     * 配置优雅停机
+     */
     private String shutwait;
 
     public static ApplicationBuilder newBuilder() {

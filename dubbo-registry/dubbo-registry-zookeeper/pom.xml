@@ -25,6 +25,12 @@
     <artifactId>dubbo-registry-zookeeper</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
+    Zookeeper 是 Apacahe Hadoop 的子项目，
+    <!--是一个树型的目录服务，支持变更推送，适合作为 Dubbo 服务的注册中心，工业强度较高，可用于生产环境，并推荐使用。-->
+
+    <!--服务提供者启动时: 向 /dubbo/com.foo.BarService/providers 目录下写入自己的 URL 地址-->
+    <!--服务消费者启动时: 订阅 /dubbo/com.foo.BarService/providers 目录下的提供者 URL 地址。并向 /dubbo/com.foo.BarService/consumers 目录下写入自己的 URL 地址-->
+    <!--监控中心启动时: 订阅 /dubbo/com.foo.BarService 目录下的所有提供者和消费者 URL 地址。-->
     <description>The zookeeper registry module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

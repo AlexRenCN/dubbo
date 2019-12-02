@@ -31,9 +31,13 @@ import java.util.Map;
  */
 public abstract class AbstractBuilder<C extends AbstractConfig, B extends AbstractBuilder> {
     /**
+     * 配置ID
      * The config id
      */
     protected String id;
+    /**
+     * 环境
+     */
     protected String prefix;
 
     public B id(String id) {

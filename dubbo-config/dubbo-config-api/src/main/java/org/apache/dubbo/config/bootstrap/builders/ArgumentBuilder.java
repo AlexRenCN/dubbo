@@ -24,16 +24,19 @@ import org.apache.dubbo.config.ArgumentConfig;
  */
 public class ArgumentBuilder {
     /**
+     * 参数索引：index-1表示未设置
      * The argument index: index -1 represents not set
      */
     private Integer index = -1;
 
     /**
+     * 参数类型
      * Argument type
      */
     private String type;
 
     /**
+     * 参数是否为回调接口
      * Whether the argument is the callback interface
      */
     private Boolean callback;

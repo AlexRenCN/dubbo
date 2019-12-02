@@ -26,6 +26,7 @@
     <artifactId>dubbo-common</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
+    <!--公共逻辑模块：提供工具类和通用模型-->
     <description>The common module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

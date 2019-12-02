@@ -27,35 +27,59 @@ import java.util.Map;
  */
 public class MetadataReportBuilder extends AbstractBuilder<MetadataReportConfig, MetadataReportBuilder> {
 
+    /**
+     * 注册中心地址
+     */
     // Register center address
     private String address;
 
+    /**
+     * 注册中心用户名
+     */
     // Username to login register center
     private String username;
 
+    /**
+     * 注册中心密码
+     */
     // Password to login register center
     private String password;
 
+    /**
+     * 注册中心请求超时时间（毫秒）
+     */
     // Request timeout in milliseconds for register center
     private Integer timeout;
 
     /**
+     * 元数据所在的组。与注册中心相同
      * The group the metadata in . It is the same as registry
      */
     private String group;
 
+    /**
+     * 自定义参数
+     */
     // Customized parameters
     private Map<String, String> parameters;
 
+    /**
+     * 重试次数
+     */
     private Integer retryTimes;
 
+    /**
+     * 重试间隔
+     */
     private Integer retryPeriod;
     /**
+     * 默认情况下元数据存储将每天重复存储完整的元数据。
      * By default the metadatastore will store full metadata repeatly every day .
      */
     private Boolean cycleReport;
 
     /**
+     * 同步报告，默认异步
      * Sync report, default async
      */
     private Boolean syncReport;

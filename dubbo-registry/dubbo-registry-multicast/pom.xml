@@ -25,6 +25,14 @@
     <artifactId>dubbo-registry-multicast</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
+    <!--Multicast 注册中心不需要启动任何中心节点，只要广播地址一样，就可以互相发现。-->
+
+    <!--提供方启动时广播自己的地址-->
+    <!--消费方启动时广播订阅请求-->
+    <!--提供方收到订阅请求时，单播自己的地址给订阅者，如果设置了 unicast=false，则广播给订阅者-->
+    <!--消费方收到提供方地址时，连接该地址进行 RPC 调用。-->
+
+    <!--只适合小规模应用或开发阶段使用-->
     <description>The multicast registry module of dubbo project</description>
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>

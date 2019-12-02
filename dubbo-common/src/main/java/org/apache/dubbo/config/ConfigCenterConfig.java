@@ -40,40 +40,82 @@ import static org.apache.dubbo.config.Constants.ZOOKEEPER_PROTOCOL;
 public class ConfigCenterConfig extends AbstractConfig {
     private AtomicBoolean inited = new AtomicBoolean(false);
 
+    /**
+     * 协议
+     */
     private String protocol;
+    /**
+     * 地址
+     */
     private String address;
 
+    /**
+     * 集群
+     * 他的真正含义可能是不同的配置中心实现
+     */
     /* The config center cluster, it's real meaning may very on different Config Center products. */
     private String cluster;
 
+    /**
+     * 命名空间
+     * 配置中心的名称空间，通常用于多租户，但它的真正含义取决于您使用的实际配置中心。
+     */
     /* The namespace of the config center, generally it's used for multi-tenant,
     but it's real meaning depends on the actual Config Center you use.
     */
 
     private String namespace = CommonConstants.DUBBO;
+    /**
+     * 配置中心组
+     * 配置中心组，通常用于标识一批配置项的独立空间，但它的真正含义取决于您使用的实际配置中心。
+     */
     /* The group of the config center, generally it's used to identify an isolated space for a batch of config items,
     but it's real meaning depends on the actual Config Center you use.
     */
     private String group = CommonConstants.DUBBO;
+    /**
+     * 用户名
+     */
     private String username;
+    /**
+     * 密码
+     */
     private String password;
+    /**
+     * 超时时间
+     */
     private Long timeout = 3000L;
-
+    /**
+     * 配置是不是最高优先级。如果配置中心被赋予最高优先级，它将覆盖所有其他配置
+     */
     // If the Config Center is given the highest priority, it will override all the other configurations
     private Boolean highestPriority = true;
 
+    /**
+     * 决定初始连接尝试失败时的行为，'true'表示失败时中断整个过程。
+     */
     // Decide the behaviour when initial connection try fails, 'true' means interrupt the whole process once fail.
     private Boolean check = true;
 
+    /**
+     * 全局配置文件，用于指定属性文件映射到的键，大多数情况下不需要更改此参数。注意，对于Apollo来说，这个参数毫无意义，设置“namespace”就足够了。
+     */
     /* Used to specify the key that your properties file mapping to, most of the time you do not need to change this parameter.
     Notice that for Apollo, this parameter is meaningless, set the 'namespace' is enough.
     */
     private String configFile = CommonConstants.DEFAULT_DUBBO_PROPERTIES;
 
+    /**
+     * 应用配置文件，“configFile”下的.properties文件是全局共享的，而此文件下的.properties仅限于此应用程序
+     */
     /* the .properties file under 'configFile' is global shared while .properties under this one is limited only to this application
     */
     private String appConfigFile;
 
+    /**
+     * 自定义参数
+     * 如果您使用的配置中心产品具有一些此类未涵盖的特殊参数，则可以将其添加到此处。
+     */
     /* If the Config Center product you use have some special parameters that is not covered by this class, you can add it to here.
     For example, with XML:
       <dubbo:config-center>
@@ -82,8 +124,14 @@ public class ConfigCenterConfig extends AbstractConfig {
      */
     private Map<String, String> parameters;
 
+    /**
+     * 外部配置
+     */
     private Map<String, String> externalConfiguration;
 
+    /**
+     * 应用程序外部配置
+     */
     private Map<String, String> appExternalConfiguration;
 
     public ConfigCenterConfig() {
