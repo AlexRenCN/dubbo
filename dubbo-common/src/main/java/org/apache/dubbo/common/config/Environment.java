@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.common.config;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.config.configcenter.DynamicConfiguration;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.context.FrameworkExt;
@@ -35,8 +36,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Environment extends LifecycleAdapter implements FrameworkExt {
     public static final String NAME = "environment";
 
+    /**
+     * 配置文件配置
+     */
     private Map<String, PropertiesConfiguration> propertiesConfigs = new ConcurrentHashMap<>();
+    /**
+     * 系统配置
+     */
     private Map<String, SystemConfiguration> systemConfigs = new ConcurrentHashMap<>();
+    /**
+     * 系统环境配置
+     */
     private Map<String, EnvironmentConfiguration> environmentConfigs = new ConcurrentHashMap<>();
     private Map<String, InmemoryConfiguration> externalConfigs = new ConcurrentHashMap<>();
     private Map<String, InmemoryConfiguration> appExternalConfigs = new ConcurrentHashMap<>();
@@ -44,6 +54,9 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
     private Map<String, String> externalConfigurationMap = new HashMap<>();
     private Map<String, String> appExternalConfigurationMap = new HashMap<>();
 
+    /**
+     * 配置中心的配置是否优先使用
+     */
     private boolean configCenterFirst = true;
 
     private DynamicConfiguration dynamicConfiguration;
@@ -64,6 +77,12 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
         return propertiesConfigs.computeIfAbsent(toKey(prefix, id), k -> new PropertiesConfiguration(prefix, id));
     }
 
+    /**
+     * 获取系统配置
+     * @param prefix
+     * @param id
+     * @return
+     */
     public SystemConfiguration getSystemConfig(String prefix, String id) {
         return systemConfigs.computeIfAbsent(toKey(prefix, id), k -> new SystemConfiguration(prefix, id));
     }
@@ -119,8 +138,11 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
     }
 
     /**
+     * 为每次调用创建新的实例，因为它只能在启动时调用，我认为潜在的成本没有什么大不了的。
      * Create new instance for each call, since it will be called only at startup, I think there's no big deal of the potential cost.
+     * 否则，如果使用缓存，我们应该确保每个配置都有一个唯一的id，这是很难保证的，因为它在用户端，
      * Otherwise, if use cache, we should make sure each Config has a unique id which is difficult to guarantee because is on the user's side,
+     * 尤其是当涉及到ServiceConfig和ReferenceConfig时。
      * especially when it comes to ServiceConfig and ReferenceConfig.
      *
      * @param prefix
@@ -129,11 +151,17 @@ public class Environment extends LifecycleAdapter implements FrameworkExt {
      */
     public CompositeConfiguration getConfiguration(String prefix, String id) {
         CompositeConfiguration compositeConfiguration = new CompositeConfiguration();
+        // 配置中心具有最高优先级
         // Config center has the highest priority
+        // 系统配置
         compositeConfiguration.addConfiguration(this.getSystemConfig(prefix, id));
+        // 系统环境配置
         compositeConfiguration.addConfiguration(this.getEnvironmentConfig(prefix, id));
+        // 应用配置
         compositeConfiguration.addConfiguration(this.getAppExternalConfig(prefix, id));
+        // 内存配置
         compositeConfiguration.addConfiguration(this.getExternalConfig(prefix, id));
+        // 配置文件配置
         compositeConfiguration.addConfiguration(this.getPropertiesConfig(prefix, id));
         return compositeConfiguration;
     }

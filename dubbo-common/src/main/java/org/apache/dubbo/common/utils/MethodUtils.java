@@ -21,6 +21,11 @@ import java.lang.reflect.Modifier;
 
 public class MethodUtils {
 
+    /**
+     * 是set方法
+     * @param method
+     * @return
+     */
     public static boolean isSetter(Method method) {
         return method.getName().startsWith("set")
                 && !"set".equals(method.getName())
@@ -29,6 +34,11 @@ public class MethodUtils {
                 && ClassUtils.isPrimitive(method.getParameterTypes()[0]);
     }
 
+    /**
+     * 是get方法
+     * @param method
+     * @return
+     */
     public static boolean isGetter(Method method) {
         String name = method.getName();
         return (name.startsWith("get") || name.startsWith("is"))
@@ -39,6 +49,11 @@ public class MethodUtils {
                 && ClassUtils.isPrimitive(method.getReturnType());
     }
 
+    /**
+     * 是java元数据方法
+     * @param method
+     * @return
+     */
     public static boolean isMetaMethod(Method method) {
         String name = method.getName();
         if (!(name.startsWith("get") || name.startsWith("is"))) {
@@ -62,6 +77,11 @@ public class MethodUtils {
         return true;
     }
 
+    /**
+     * 方法是否过期
+     * @param method
+     * @return
+     */
     public static boolean isDeprecated(Method method) {
         return method.getAnnotation(Deprecated.class) != null;
     }

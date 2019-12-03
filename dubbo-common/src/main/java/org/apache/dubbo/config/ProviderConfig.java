@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * 服务提供者默认配置
  * The service provider default configuration
  *
  * @export

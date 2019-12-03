@@ -49,6 +49,9 @@ import static org.apache.dubbo.rpc.Constants.THROW_PREFIX;
 final public class MockInvoker<T> implements Invoker<T> {
     private final static ProxyFactory PROXY_FACTORY = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
     private final static Map<String, Invoker<?>> MOCK_MAP = new ConcurrentHashMap<String, Invoker<?>>();
+    /**
+     * mock语句返回异常类型的本地缓存
+     */
     private final static Map<String, Throwable> THROWABLE_MAP = new ConcurrentHashMap<String, Throwable>();
 
     private final URL url;
@@ -138,18 +141,28 @@ final public class MockInvoker<T> implements Invoker<T> {
         }
     }
 
+    /**
+     * 检查mock异常能不能被正常找到并抛出
+     * @param throwstr
+     * @return
+     */
     public static Throwable getThrowable(String throwstr) {
+        //从本地缓存中获取异常
         Throwable throwable = THROWABLE_MAP.get(throwstr);
+        //如果获取则直接返回
         if (throwable != null) {
             return throwable;
         }
 
         try {
             Throwable t;
+            //通过反射获取需要抛出的异常
             Class<?> bizException = ReflectUtils.forName(throwstr);
             Constructor<?> constructor;
+            //找到这个异常的string类型构造器
             constructor = ReflectUtils.findConstructor(bizException, String.class);
             t = (Throwable) constructor.newInstance(new Object[]{"mocked exception for service degradation."});
+            //最多缓存1000个异常类型
             if (THROWABLE_MAP.size() < 1000) {
                 THROWABLE_MAP.put(throwstr, t);
             }
@@ -177,10 +190,12 @@ final public class MockInvoker<T> implements Invoker<T> {
 
     @SuppressWarnings("unchecked")
     public static Object getMockObject(String mockService, Class serviceType) {
+        //本地mock类名默认值是接口类+Mock
         if (ConfigUtils.isDefault(mockService)) {
             mockService = serviceType.getName() + "Mock";
         }
 
+        //检查mock类是否是interfaceClass的实现
         Class<?> mockClass = ReflectUtils.forName(mockService);
         if (!serviceType.isAssignableFrom(mockClass)) {
             throw new IllegalStateException("The mock class " + mockClass.getName() +
@@ -188,6 +203,7 @@ final public class MockInvoker<T> implements Invoker<T> {
         }
 
         try {
+            //检查否具有默认构造函数
             return mockClass.newInstance();
         } catch (InstantiationException e) {
             throw new IllegalStateException("No default constructor from mock class " + mockClass.getName(), e);
@@ -198,6 +214,7 @@ final public class MockInvoker<T> implements Invoker<T> {
 
 
     /**
+     * 标准化mock字符串内容
      * Normalize mock string:
      *
      * <ol>

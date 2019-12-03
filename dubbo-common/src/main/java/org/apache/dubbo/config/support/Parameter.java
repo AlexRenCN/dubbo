@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 用于 Dubbo URL 的 parameters 拼接。用在配置对象的 getting 方法上
  * Parameter
  */
 @Documented
@@ -30,20 +31,47 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface Parameter {
 
+    /**
+     * 键（别名）
+     * @return
+     */
     String key() default "";
 
+    /**
+     * 必填校验
+     * @return
+     */
     boolean required() default false;
 
+    /**
+     * 是否忽略
+     * @return
+     */
     boolean excluded() default false;
 
+    /**
+     * 是否转义
+     * @return
+     */
     boolean escaped() default false;
 
+    /**
+     * 是否是属性
+     * @return
+     */
     boolean attribute() default false;
 
+    /**
+     * 是否拼接默认属性
+     * @return
+     */
     boolean append() default false;
 
     /**
+     * 是否用键作为属性（在key有值时有效）
+     * 如果指定了键，它将在生成url时用作带注释属性的键。
      * if {@link #key()} is specified, it will be used as the key for the annotated property when generating url.
+     * 默认情况下，此键还将用于检索配置值：
      * by default, this key will also be used to retrieve the config value:
      * <pre>
      * {@code

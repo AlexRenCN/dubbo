@@ -102,9 +102,12 @@ import static org.apache.dubbo.remoting.Constants.CLIENT_KEY;
 /**
  * See {@link ApplicationModel} and {@link ExtensionLoader} for why this class is designed to be singleton.
  *
+ * dubbo的bootstrap类
  * The bootstrap class of Dubbo
  *
+ * 通过getInstance方法获取一个单例对象
  * Get singleton instance by calling static method {@link #getInstance()}.
+ * 设计为单例是因为Dubbo中的一些类，比如ExtensionLoader，每个进程仅为一个实例设计。
  * Designed as singleton because some classes inside Dubbo, such as ExtensionLoader, are designed only for one instance per process.
  *
  * @since 2.7.5
@@ -171,6 +174,7 @@ public class DubboBootstrap extends GenericEventListener {
      * See {@link ApplicationModel} and {@link ExtensionLoader} for why DubboBootstrap is designed to be singleton.
      */
     public static synchronized DubboBootstrap getInstance() {
+        //单例模式，如果没有实例就创建一个，否则就直接返回
         if (instance == null) {
             instance = new DubboBootstrap();
         }
@@ -178,9 +182,11 @@ public class DubboBootstrap extends GenericEventListener {
     }
 
     private DubboBootstrap() {
+        //填充配置管理器和环境信息
         configManager = ApplicationModel.getConfigManager();
         environment = ApplicationModel.getEnvironment();
 
+        //添加一个关闭的钩子函数，用来销毁本身
         ShutdownHookCallbacks.INSTANCE.addCallback(new ShutdownHookCallback() {
             @Override
             public void callback() throws Throwable {
@@ -193,25 +199,34 @@ public class DubboBootstrap extends GenericEventListener {
         DubboShutdownHook.getDubboShutdownHook().register();
     }
 
+    /**
+     * 是否只注册为服务提供者
+     * @return
+     */
     private boolean isOnlyRegisterProvider() {
         Boolean registerConsumer = getApplication().getRegisterConsumer();
+        //如果不指定注册为消费者 或者 指定不注册为消费者，则只注册为服务提供者
         return registerConsumer == null || !registerConsumer;
     }
 
     private String getMetadataType() {
+        //获取元数据类型
         String type = getApplication().getMetadataType();
         if (StringUtils.isEmpty(type)) {
+            //默认类型是local
             type = DEFAULT_METADATA_STORAGE_TYPE;
         }
         return type;
     }
 
     public DubboBootstrap metadataReport(MetadataReportConfig metadataReportConfig) {
+        //在配置管理中填充元数据报告配置
         configManager.addMetadataReport(metadataReportConfig);
         return this;
     }
 
     public DubboBootstrap metadataReports(List<MetadataReportConfig> metadataReportConfigs) {
+        //在配置管理中填充多个元数据报告配置
         if (CollectionUtils.isEmpty(metadataReportConfigs)) {
             return this;
         }
@@ -262,6 +277,7 @@ public class DubboBootstrap extends GenericEventListener {
     // {@link RegistryConfig} correlative methods
 
     /**
+     * 在注册中心里注册服务（默认ID）
      * Add an instance of {@link RegistryConfig} with {@link #DEFAULT_REGISTRY_ID default ID}
      *
      * @param consumerBuilder the {@link Consumer} of {@link RegistryBuilder}
@@ -272,6 +288,7 @@ public class DubboBootstrap extends GenericEventListener {
     }
 
     /**
+     * 在注册中心里注册服务（指定ID）
      * Add an instance of {@link RegistryConfig} with the specified ID
      *
      * @param id              the {@link RegistryConfig#getId() id}  of {@link RegistryConfig}
@@ -285,6 +302,7 @@ public class DubboBootstrap extends GenericEventListener {
     }
 
     /**
+     * 在注册中心里注册服务
      * Add an instance of {@link RegistryConfig}
      *
      * @param registryConfig an instance of {@link RegistryConfig}
@@ -296,6 +314,7 @@ public class DubboBootstrap extends GenericEventListener {
     }
 
     /**
+     * 在多个注册中心里注册服务
      * Add an instance of {@link RegistryConfig}
      *
      * @param registryConfigs the multiple instances of {@link RegistryConfig}

@@ -33,6 +33,7 @@ import static org.apache.dubbo.config.Constants.ON_THROW_INSTANCE_KEY;
 import static org.apache.dubbo.config.Constants.ON_THROW_METHOD_KEY;
 
 /**
+ * 方法级配置
  * The method configuration
  *
  * @export
@@ -48,7 +49,7 @@ public class MethodConfig extends AbstractMethodConfig {
     private String name;
 
     /**
-     * FIXME 节点？？
+     * FIXME static？？
      * Stat
      */
     private Integer stat;

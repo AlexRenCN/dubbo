@@ -56,7 +56,7 @@ public abstract class AbstractServiceBuilder<T extends AbstractServiceConfig, B 
     protected Integer delay;
 
     /**
-     * 是否导出服务
+     * 是否暴露服务
      * Whether to export the service
      */
     protected Boolean export;
@@ -94,7 +94,7 @@ public abstract class AbstractServiceBuilder<T extends AbstractServiceConfig, B 
     protected String accesslog;
 
     /**
-     * 服务将导出的协议列表
+     * 服务将暴露的协议列表
      * The protocol list the service will export with
      */
     protected List<ProtocolConfig> protocols;

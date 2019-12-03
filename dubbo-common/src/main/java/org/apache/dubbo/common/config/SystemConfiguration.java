@@ -18,6 +18,7 @@ package org.apache.dubbo.common.config;
 
 
 /**
+ * 系统配置
  * FIXME: is this really necessary? PropertiesConfiguration should have already covered this:
  * @see PropertiesConfiguration
  * @See ConfigUtils#getProperty(String)

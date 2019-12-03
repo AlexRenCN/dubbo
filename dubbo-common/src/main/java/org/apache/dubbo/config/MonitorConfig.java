@@ -23,6 +23,7 @@ import org.apache.dubbo.config.support.Parameter;
 import java.util.Map;
 
 /**
+ * 监控中心配置
  * MonitorConfig
  *
  * @export

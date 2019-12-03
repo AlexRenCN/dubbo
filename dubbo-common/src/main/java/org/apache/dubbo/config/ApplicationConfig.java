@@ -47,7 +47,7 @@ import static org.apache.dubbo.config.Constants.TEST_ENVIRONMENT;
 
 
 /**
- * 应用信息
+ * 应用配置
  * The application info
  *
  * @export
@@ -177,6 +177,9 @@ public class ApplicationConfig extends AbstractConfig {
      */
     private String metadataType;
 
+    /**
+     * 是否注册为消费者
+     */
     private Boolean registerConsumer;
 
     private String repository;

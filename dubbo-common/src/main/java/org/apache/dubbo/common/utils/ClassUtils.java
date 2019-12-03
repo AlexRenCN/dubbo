@@ -272,6 +272,7 @@ public class ClassUtils {
 
 
     /**
+     * 在这里只检查boolean值
      * We only check boolean value at this moment.
      *
      * @param type

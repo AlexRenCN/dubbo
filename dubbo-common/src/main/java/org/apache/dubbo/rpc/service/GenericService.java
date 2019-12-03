@@ -19,6 +19,7 @@ package org.apache.dubbo.rpc.service;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 泛化服务接口（服务的消费者通过$invoke进行消费）
  * Generic service interface
  *
  * @export
@@ -26,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public interface GenericService {
 
     /**
+     * 泛化调用
      * Generic invocation
      *
      * @param method         Method name, e.g. findPerson. If there are overridden methods, parameter info is

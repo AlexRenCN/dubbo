@@ -31,36 +31,43 @@ import java.util.List;
  */
 public class ReferenceBuilder<T> extends AbstractReferenceBuilder<ReferenceConfig, ReferenceBuilder<T>> {
     /**
+     * 引用服务的接口名称
      * The interface name of the reference service
      */
     private String interfaceName;
 
     /**
+     * 引用服务的接口类
      * The interface class of the reference service
      */
     private Class<?> interfaceClass;
 
     /**
+     * 客户端类型
      * client type
      */
     private String client;
 
     /**
+     * 点对点调用的URL
      * The url for peer-to-peer invocation
      */
     private String url;
 
     /**
+     * 方法配置
      * The method configs
      */
     private List<MethodConfig> methods;
 
     /**
+     * 使用者配置（默认）
      * The consumer config (default)
      */
     private ConsumerConfig consumer;
 
     /**
+     * 只调用指定协议的服务提供程序，而忽略其他协议。
      * Only the service provider of the specified protocol is invoked, and other protocols are ignored.
      */
     private String protocol;

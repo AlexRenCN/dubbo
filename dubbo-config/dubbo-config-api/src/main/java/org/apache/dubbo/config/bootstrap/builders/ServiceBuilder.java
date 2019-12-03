@@ -31,40 +31,48 @@ import java.util.List;
  */
 public class ServiceBuilder<U> extends AbstractServiceBuilder<ServiceConfig, ServiceBuilder<U>> {
     /**
+     * 暴露服务的接口名称
      * The interface name of the exported service
      */
     private String interfaceName;
 
     /**
+     * 暴露服务的接口类
      * The interface class of the exported service
      */
     private Class<?> interfaceClass;
 
     /**
+     * 接口实现的引用
      * The reference of the interface implementation
      */
     private U ref;
 
     /**
+     * 服务名称
      * The service name
      */
     private String path;
 
     /**
+     * 方法配置
      * The method configuration
      */
     private List<MethodConfig> methods;
 
     /**
+     * 提供程序配置
      * The provider configuration
      */
     private ProviderConfig provider;
 
     /**
+     * 提供者ID
      * The providerIds
      */
     private String providerIds;
     /**
+     * 是否为一般服务
      * whether it is a GenericService
      */
     private String generic;

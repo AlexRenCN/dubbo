@@ -19,6 +19,7 @@ package org.apache.dubbo.common.config;
 import org.apache.dubbo.common.utils.StringUtils;
 
 /**
+ * 系统环境配置
  * Configuration from system environment
  */
 public class EnvironmentConfiguration extends AbstractPrefixConfiguration {

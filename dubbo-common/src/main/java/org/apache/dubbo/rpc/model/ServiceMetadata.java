@@ -23,20 +23,39 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 注意，这个类目前在Dubbo中没有用法。
  * Notice, this class currently has no usage inside Dubbo.
  *
+ * 与服务级别相关的数据，如业务服务的名称、版本、类加载器、安全信息等，还带有扩展属性映射。
  * data related to service level such as name, version, classloader of business service,
  * security info, etc. Also with a AttributeMap for extension.
  */
 public class ServiceMetadata extends ServiceDescriptor {
 
+    /**
+     * 默认组
+     */
     private String defaultGroup;
+    /**
+     * 服务类
+     */
     private Class<?> serviceType;
 
+    /**
+     * 代理
+     */
     private Object target;
 
+    /**
+     * 附带信息
+     * 将传输到远程端
+     */
     /* will be transferred to remote side */
     private final Map<String, Object> attachments = new ConcurrentHashMap<String, Object>();
+    /**
+     * 属性集合
+     * 本地使用
+     */
     /* used locally*/
     private final Map<String, Object> attributeMap = new ConcurrentHashMap<String, Object>();
 

@@ -34,6 +34,7 @@ import java.util.Properties;
 import static org.apache.dubbo.common.constants.CommonConstants.DUBBO;
 
 /**
+ * 引用服务配置
  * ReferenceConfig
  *
  * @export
@@ -43,35 +44,44 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
     private static final long serialVersionUID = -5864351140409987595L;
 
     /**
+     * 引用服务的接口名称
      * The interface name of the reference service
      */
     protected String interfaceName;
 
     /**
+     * 引用服务的接口类
      * The interface class of the reference service
      */
     protected Class<?> interfaceClass;
 
     /**
+     * 客户端类型
      * client type
      */
     protected String client;
 
     /**
+     * 点对点调用的URL
      * The url for peer-to-peer invocation
      */
     protected String url;
 
     /**
+     * 使用者配置（默认）
      * The consumer config (default)
      */
     protected ConsumerConfig consumer;
 
     /**
+     * 只调用指定协议的服务提供程序，而忽略其他协议。
      * Only the service provider of the specified protocol is invoked, and other protocols are ignored.
      */
     protected String protocol;
 
+    /**
+     * 与服务级别相关的数据
+     */
     protected ServiceMetadata serviceMetadata;
 
     public ReferenceConfigBase() {

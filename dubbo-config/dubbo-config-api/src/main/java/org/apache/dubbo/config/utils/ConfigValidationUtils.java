@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.config.utils;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.URLBuilder;
 import org.apache.dubbo.common.extension.ExtensionLoader;
@@ -166,26 +167,40 @@ public class ConfigValidationUtils {
     private static final Pattern PATTERN_KEY = Pattern.compile("[*,\\-._0-9a-zA-Z]+");
 
 
+    /**
+     * 解析注册中心的URL
+     * @param interfaceConfig
+     * @param provider
+     * @return
+     */
     public static List<URL> loadRegistries(AbstractInterfaceConfig interfaceConfig, boolean provider) {
         // check && override if necessary
         List<URL> registryList = new ArrayList<URL>();
+        //获取应用信息
         ApplicationConfig application = interfaceConfig.getApplication();
+        //获取注册中心信息
         List<RegistryConfig> registries = interfaceConfig.getRegistries();
+        //如果指定了注册中心，进行循环检查
         if (CollectionUtils.isNotEmpty(registries)) {
             for (RegistryConfig config : registries) {
                 String address = config.getAddress();
+                //注册中心的地址没有配置就使用0.0.0.0作为默认地址
                 if (StringUtils.isEmpty(address)) {
                     address = ANYHOST_VALUE;
                 }
+                //如果有可用的地址
                 if (!RegistryConfig.NO_AVAILABLE.equalsIgnoreCase(address)) {
                     Map<String, String> map = new HashMap<String, String>();
                     AbstractConfig.appendParameters(map, application);
                     AbstractConfig.appendParameters(map, config);
                     map.put(PATH_KEY, RegistryService.class.getName());
+                    //添加运行时参数
                     AbstractInterfaceConfig.appendRuntimeParameters(map);
+                    //如果没有指定协议，就使用默认的dubbo协议
                     if (!map.containsKey(PROTOCOL_KEY)) {
                         map.put(PROTOCOL_KEY, DUBBO_PROTOCOL);
                     }
+                    //将注册中心的地址解析成URL，并在之后循环进行更进一步的填充
                     List<URL> urls = UrlUtils.parseURLs(address, map);
 
                     for (URL url : urls) {
@@ -249,6 +264,7 @@ public class ConfigValidationUtils {
     }
 
     /**
+     * 合法性检查和本地mock操作的建立，操作可以是带有简单操作的字符串，也可以是{@link Class}实现特定函数的类名
      * Legitimacy check and setup of local simulated operations. The operations can be a string with Simple operation or
      * a classname whose {@link Class} implements a particular function
      *
@@ -256,25 +272,34 @@ public class ConfigValidationUtils {
      *                       side, it is the {@link Class} of the remote service interface that will be referenced
      */
     public static void checkMock(Class<?> interfaceClass, AbstractInterfaceConfig config) {
+        //获取mock类
         String mock = config.getMock();
+        //没配置mock类就直接返回
         if (ConfigUtils.isEmpty(mock)) {
             return;
         }
 
+        //标准化mock字符串内容
         String normalizedMock = MockInvoker.normalizeMock(mock);
+        //如果是返回固定值类型
         if (normalizedMock.startsWith(RETURN_PREFIX)) {
+            //从mock语句中获取 返回的真实值
             normalizedMock = normalizedMock.substring(RETURN_PREFIX.length()).trim();
             try {
+                //检查模拟值是否合法，如果是非法的，抛出异常
                 //Check whether the mock value is legal, if it is illegal, throw exception
                 MockInvoker.parseMockValue(normalizedMock);
             } catch (Exception e) {
                 throw new IllegalStateException("Illegal mock return in <dubbo:service/reference ... " +
                         "mock=\"" + mock + "\" />");
             }
+        //如果是抛出异常
         } else if (normalizedMock.startsWith(THROW_PREFIX)) {
+            //从mock语句中获取 返回需要抛出的异常
             normalizedMock = normalizedMock.substring(THROW_PREFIX.length()).trim();
             if (ConfigUtils.isNotEmpty(normalizedMock)) {
                 try {
+                    //检查模拟值是否合法
                     //Check whether the mock value is legal
                     MockInvoker.getThrowable(normalizedMock);
                 } catch (Exception e) {
@@ -283,52 +308,81 @@ public class ConfigValidationUtils {
                 }
             }
         } else {
+            //检查mock类是否是interfaceClass的实现，以及它是否具有默认构造函数
             //Check whether the mock class is a implementation of the interfaceClass, and if it has a default constructor
             MockInvoker.getMockObject(normalizedMock, interfaceClass);
         }
     }
 
+    /**
+     * 检查抽象接口配置和接口配置的合法性
+     * @param config
+     */
     public static void validateAbstractInterfaceConfig(AbstractInterfaceConfig config) {
+        //先检查接口的抽象配置
+        //检查是否配置了接口本地实现类名
         checkName(LOCAL_KEY, config.getLocal());
+        //检查是否配置了接口父类名
         checkName("stub", config.getStub());
+        //检查是否配置了接口所属者
         checkMultiName("owner", config.getOwner());
 
+        //检查是否配置了接口代理类生成方式
         checkExtension(ProxyFactory.class, PROXY_KEY, config.getProxy());
+        //检查是否配置了接口集群
         checkExtension(Cluster.class, CLUSTER_KEY, config.getCluster());
+        //检查是否配置了接口调用或者发布的过滤器
         checkMultiExtension(Filter.class, FILE_KEY, config.getFilter());
+        //检查是否配置了接口调用或者发布的监听器
         checkMultiExtension(InvokerListener.class, LISTENER_KEY, config.getListener());
+        //检查是否配置了接口所在的层
         checkNameHasSymbol(LAYER_KEY, config.getLayer());
 
+        //再检查每一个接口的配置
         List<MethodConfig> methods = config.getMethods();
         if (CollectionUtils.isNotEmpty(methods)) {
+            //检查单独接口的配置合法性
             methods.forEach(ConfigValidationUtils::validateMethodConfig);
         }
     }
 
+    /**
+     * 检查服务配置
+     * @param config
+     */
     public static void validateServiceConfig(ServiceConfig config) {
+        //检查有没有配置服务版本
         checkKey(VERSION_KEY, config.getVersion());
+        //检查有没有配置服务组
         checkKey(GROUP_KEY, config.getGroup());
+        //检查有没有配置服务token
         checkName(TOKEN_KEY, config.getToken());
+        //检查有没有配置服务地址
         checkPathName(PATH_KEY, config.getPath());
-
+        //检查监听器
         checkMultiExtension(ExporterListener.class, "listener", config.getListener());
-
+        //检查抽象接口配置和所有接口配置
         validateAbstractInterfaceConfig(config);
 
+        //如果指定了注册中心，则检查所有注册中心配置
         List<RegistryConfig> registries = config.getRegistries();
         if (registries != null) {
             for (RegistryConfig registry : registries) {
+                //检查单个注册中心配置
                 validateRegistryConfig(registry);
             }
         }
 
+        //如果指定了服务提供者协议，则检查所有的服务提供者协议配置
         List<ProtocolConfig> protocols = config.getProtocols();
         if (protocols != null) {
             for (ProtocolConfig protocol : protocols) {
+                //检查单个服务提供者协议配置
                 validateProtocolConfig(protocol);
             }
         }
 
+        //如果指定了服务提供者，则检查服务提供者配置
         ProviderConfig providerConfig = config.getProvider();
         if (providerConfig != null) {
             validateProviderConfig(providerConfig);
@@ -428,42 +482,71 @@ public class ConfigValidationUtils {
         }
     }
 
+    /**
+     * 检查服务提供者协议配置
+     * @param config
+     */
     public static void validateProtocolConfig(ProtocolConfig config) {
         if (config != null) {
+            //检查服务提供者的协议名
             String name = config.getName();
             checkName("name", name);
+            //检查服务提供者的ip地址
             checkName(HOST_KEY, config.getHost());
+            //检查服务提供者的上下文路径
             checkPathName("contextpath", config.getContextpath());
 
 
+            //FIXME？？？？这是写了个啥
+            //如果是dubbo协议，检查协议编解码器
             if (DUBBO_PROTOCOL.equals(name)) {
                 checkMultiExtension(Codec.class, CODEC_KEY, config.getCodec());
             }
+            //如果是dubbo协议，检查协议序列化器
             if (DUBBO_PROTOCOL.equals(name)) {
                 checkMultiExtension(Serialization.class, SERIALIZATION_KEY, config.getSerialization());
             }
+            //如果是dubbo协议，检查实现类
             if (DUBBO_PROTOCOL.equals(name)) {
                 checkMultiExtension(Transporter.class, SERVER_KEY, config.getServer());
             }
+            //如果是dubbo协议，检查客户端实现
             if (DUBBO_PROTOCOL.equals(name)) {
                 checkMultiExtension(Transporter.class, CLIENT_KEY, config.getClient());
             }
+            //检查服务提供者的支持telnet命令
             checkMultiExtension(TelnetHandler.class, TELNET, config.getTelnet());
+            //检查服务提供者的状态
             checkMultiExtension(StatusChecker.class, "status", config.getStatus());
+            //检查服务提供者的转换器
             checkExtension(Transporter.class, TRANSPORTER_KEY, config.getTransporter());
+            //检查服务提供者的交换机
             checkExtension(Exchanger.class, EXCHANGER_KEY, config.getExchanger());
+            //检查服务提供者的线程调度器
             checkExtension(Dispatcher.class, DISPATCHER_KEY, config.getDispatcher());
+            //检查服务提供者的线程调度器
             checkExtension(Dispatcher.class, "dispather", config.getDispather());
+            //检查服务提供者的线程池
             checkExtension(ThreadPool.class, THREADPOOL_KEY, config.getThreadpool());
         }
     }
 
+    /**
+     * 检查服务提供者配置
+     * @param config
+     */
     public static void validateProviderConfig(ProviderConfig config) {
+        //检查服务提供者的上下文
         checkPathName(CONTEXTPATH_KEY, config.getContextpath());
+        //检查服务提供者的线程池
         checkExtension(ThreadPool.class, THREADPOOL_KEY, config.getThreadpool());
+        //检查服务提供者的支持telnet命令
         checkMultiExtension(TelnetHandler.class, TELNET, config.getTelnet());
+        //检查服务提供者的状态
         checkMultiExtension(StatusChecker.class, STATUS_KEY, config.getStatus());
+        //检查服务提供者的转换器
         checkExtension(Transporter.class, TRANSPORTER_KEY, config.getTransporter());
+        //检查服务提供者的交换机
         checkExtension(Exchanger.class, EXCHANGER_KEY, config.getExchanger());
     }
 
@@ -473,28 +556,50 @@ public class ConfigValidationUtils {
         }
     }
 
+    /**
+     * 检查注册中心配置
+     * @param config
+     */
     public static void validateRegistryConfig(RegistryConfig config) {
+        //检查是否设定了配置中心的协议
         checkName(PROTOCOL_KEY, config.getProtocol());
+        //检查是否设定了配置中心的用户名
         checkName(USERNAME_KEY, config.getUsername());
+        //检查是否设定了配置中心的密码
         checkLength(PASSWORD_KEY, config.getPassword());
+        //检查是否设定了配置中心的动态列表文件
         checkPathLength(FILE_KEY, config.getFile());
+        //检查是否设定了配置中心的网络传输类型
         checkName(TRANSPORTER_KEY, config.getTransporter());
+        //检查是否设定了配置中心的服务端
         checkName(SERVER_KEY, config.getServer());
+        //检查是否设定了配置中心的客户端
         checkName(CLIENT_KEY, config.getClient());
+        //检查是否设定了配置中心的自定义参数
         checkParameterName(config.getParameters());
     }
 
+    /**
+     * 检查方法配置的合法性
+     * @param config
+     */
     public static void validateMethodConfig(MethodConfig config) {
+        //检查是否配置了接口的负载
         checkExtension(LoadBalance.class, LOADBALANCE_KEY, config.getLoadbalance());
+        //检查是否配置了接口的参数名
         checkParameterName(config.getParameters());
+        //检查是否配置了接口的方法名
         checkMethodName("name", config.getName());
-
+        //检查是否配置了接口的mock方法
         String mock = config.getMock();
         if (StringUtils.isNotEmpty(mock)) {
+            //如果是简单mock，检查mock语句的长度
             if (mock.startsWith(RETURN_PREFIX) || mock.startsWith(THROW_PREFIX + " ")) {
                 checkLength(MOCK_KEY, mock);
+            //模板模式
             } else if (mock.startsWith(FAIL_PREFIX) || mock.startsWith(FORCE_PREFIX)) {
                 checkNameHasSymbol(MOCK_KEY, mock);
+            //其他模式
             } else {
                 checkName(MOCK_KEY, mock);
             }
@@ -514,6 +619,7 @@ public class ConfigValidationUtils {
     }
 
     /**
+     * 检查是否有扩展器的名字是"value"（如果有需要特殊处理）
      * Check whether there is a <code>Extension</code> who's name (property) is <code>value</code> (special treatment is
      * required)
      *
@@ -522,16 +628,22 @@ public class ConfigValidationUtils {
      * @param value    The Extension name
      */
     public static void checkMultiExtension(Class<?> type, String property, String value) {
+        //检查有没有配置listener监听器
         checkMultiName(property, value);
+        //如果配置了监听器
         if (StringUtils.isNotEmpty(value)) {
+            //用","进行分割，循环处理监听器
             String[] values = value.split("\\s*[,]+\\s*");
             for (String v : values) {
+                //如果是"-"开头就去掉这个开头
                 if (v.startsWith(REMOVE_VALUE_PREFIX)) {
                     v = v.substring(1);
                 }
+                //如果是default就跳过处理
                 if (DEFAULT_KEY.equals(v)) {
                     continue;
                 }
+                //检查是否能够反射到这个监听器，无法获取则抛出异常
                 if (!ExtensionLoader.getExtensionLoader(type).hasExtension(v)) {
                     throw new IllegalStateException("No such extension " + v + " for " + property + "/" + type.getName());
                 }

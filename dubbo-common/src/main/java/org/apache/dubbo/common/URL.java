@@ -56,6 +56,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.USERNAME_KEY;
 import static org.apache.dubbo.common.constants.CommonConstants.VERSION_KEY;
 
 /**
+ * URL-统一资源定位器（不可变，线程安全）
  * URL - Uniform Resource Locator (Immutable, ThreadSafe)
  * <p>
  * url example:
@@ -92,42 +93,81 @@ class URL implements Serializable {
 
     private static final long serialVersionUID = -1985165475234910535L;
 
+    /**
+     * 协议名
+     */
     private final String protocol;
 
+    /**
+     * 用户名
+     */
     private final String username;
 
+    /**
+     * 密码
+     */
     private final String password;
 
+    /**
+     * 默认情况下，注册中心的主机地址
+     */
     // by default, host to registry
     private final String host;
-
+    /**
+     * 默认情况下，注册中心的端口
+     */
     // by default, port to registry
     private final int port;
 
+    /**
+     * 请求路径
+     */
     private final String path;
 
+    /**
+     * 参数
+     */
     private final Map<String, String> parameters;
 
+    /**
+     * 方法参数
+     */
     private final Map<String, Map<String, String>> methodParameters;
 
+    // ==== 缓存 ====
     // ==== cache ====
 
     private volatile transient Map<String, Number> numbers;
 
+    /**
+     * 方法数量
+     */
     private volatile transient Map<String, Map<String, Number>> methodNumbers;
 
+    /**
+     * 结构地址
+     */
     private volatile transient Map<String, URL> urls;
 
     private volatile transient String ip;
 
     private volatile transient String full;
 
+    /**
+     * 身份验证
+     */
     private volatile transient String identity;
 
+    /**
+     * 参数
+     */
     private volatile transient String parameter;
 
     private volatile transient String string;
 
+    /**
+     * 服务密钥
+     */
     private transient String serviceKey;
 
     protected URL() {

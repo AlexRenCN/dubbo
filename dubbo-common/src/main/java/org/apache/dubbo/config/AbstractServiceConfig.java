@@ -27,6 +27,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.EXPORTER_LISTENE
 import static org.apache.dubbo.common.constants.CommonConstants.SERVICE_FILTER_KEY;
 
 /**
+ * 抽象服务配置类
  * AbstractServiceConfig
  *
  * @export
@@ -36,41 +37,49 @@ public abstract class AbstractServiceConfig extends AbstractInterfaceConfig {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 服务版本
      * The service version
      */
     protected String version;
 
     /**
+     * 服务组
      * The service group
      */
     protected String group;
 
     /**
+     * 服务是否废弃
      * whether the service is deprecated
      */
     protected Boolean deprecated = false;
 
     /**
+     * 延时注册时间（毫秒）
      * The time delay register service (milliseconds)
      */
     protected Integer delay;
 
     /**
+     * 是否暴露服务
      * Whether to export the service
      */
     protected Boolean export;
 
     /**
+     * 服务权重
      * The service weight
      */
     protected Integer weight;
 
     /**
+     * 文档中心
      * Document center
      */
     protected String document;
 
     /**
+     * 是否在注册中心注册为动态服务，如果设置为true，服务注册后，将被启用，需要手动禁用；如果要禁用该服务，你还需要手动执行
      * Whether to register as a dynamic service or not on register center, the value is true, the status will be enabled
      * after the service registered,and it needs to be disabled manually; if you want to disable the service, you also need
      * manual processing
@@ -78,35 +87,48 @@ public abstract class AbstractServiceConfig extends AbstractInterfaceConfig {
     protected Boolean dynamic = true;
 
     /**
+     * 是否使用token
      * Whether to use token
      */
     protected String token;
 
     /**
+     * 日志等级
      * Whether to export access logs to logs
      */
     protected String accesslog;
 
     /**
+     * 需要暴露的协议列表
      * The protocol list the service will export with
      */
     protected List<ProtocolConfig> protocols;
+
+    /**
+     * 协议ID
+     */
     protected String protocolIds;
 
+    /**
+     * 最大允许执行次数
+     */
     // max allowed execute times
     private Integer executes;
 
     /**
+     * 是否注册
      * Whether to register
      */
     private Boolean register;
 
     /**
+     * 热身次数
      * Warm up period
      */
     private Integer warmup;
 
     /**
+     * 序列化类型
      * The serialization type
      */
     private String serialization;

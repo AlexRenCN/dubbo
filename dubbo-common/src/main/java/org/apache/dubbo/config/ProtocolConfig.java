@@ -25,7 +25,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DUBBO_VERSION_KE
 import static org.apache.dubbo.config.Constants.PROTOCOLS_SUFFIX;
 
 /**
- * 协议配置
+ * 服务提供者协议配置
  * ProtocolConfig
  *
  * @export

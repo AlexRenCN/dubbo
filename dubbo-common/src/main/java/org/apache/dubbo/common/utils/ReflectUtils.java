@@ -937,19 +937,25 @@ public final class ReflectUtils {
     public static Constructor<?> findConstructor(Class<?> clazz, Class<?> paramType) throws NoSuchMethodException {
         Constructor<?> targetConstructor;
         try {
+            //获取用指定接口作为构造器参数的对应构造器
             targetConstructor = clazz.getConstructor(new Class<?>[]{paramType});
         } catch (NoSuchMethodException e) {
             targetConstructor = null;
+            //如果没有用指定接口做参数的，就获取所有的构造器进行遍历
             Constructor<?>[] constructors = clazz.getConstructors();
             for (Constructor<?> constructor : constructors) {
+                //如果构造器是public修饰的
                 if (Modifier.isPublic(constructor.getModifiers())
+                        //是有一个参数
                         && constructor.getParameterTypes().length == 1
+                        //如果参数是使用指定接口的子类或者实现类
                         && constructor.getParameterTypes()[0].isAssignableFrom(paramType)) {
                     targetConstructor = constructor;
                     break;
                 }
             }
             if (targetConstructor == null) {
+                //如果找不到对应的构造器则向上抛出异常
                 throw e;
             }
         }
