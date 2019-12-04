@@ -112,22 +112,43 @@ public class ConsumerModel {
         return referenceConfig;
     }
 
+    /**
+     * 异步调用方法信息
+     */
     public static class AsyncMethodInfo {
+        /**
+         * 异步调用时的回调实例
+         */
         // callback instance when async-call is invoked
         private Object oninvokeInstance;
 
+        /**
+         * 异步调用时的回调方法
+         */
         // callback method when async-call is invoked
         private Method oninvokeMethod;
 
+        /**
+         * 异步调用返回时的回调实例
+         */
         // callback instance when async-call is returned
         private Object onreturnInstance;
 
+        /**
+         * 异步调用返回时的回调方法
+         */
         // callback method when async-call is returned
         private Method onreturnMethod;
 
+        /**
+         * 异步调用异常时的回调实例
+         */
         // callback instance when async-call has exception thrown
         private Object onthrowInstance;
 
+        /**
+         * 异步调用异常时的回调方法
+         */
         // callback method when async-call has exception thrown
         private Method onthrowMethod;
 

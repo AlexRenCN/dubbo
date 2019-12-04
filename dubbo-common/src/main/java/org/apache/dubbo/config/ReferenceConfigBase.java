@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.config;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.utils.ClassUtils;
 import org.apache.dubbo.common.utils.StringUtils;
@@ -96,11 +97,18 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
         setMethods(MethodConfig.constructMethodConfig(reference.methods()));
     }
 
+    /**
+     * 是否需要检查
+     * @return
+     */
     public boolean shouldCheck() {
+        //先获取引用配置是否检查
         Boolean shouldCheck = isCheck();
+        //再获取客户端里的是否检查
         if (shouldCheck == null && getConsumer() != null) {
             shouldCheck = getConsumer().isCheck();
         }
+        //默认需要检查
         if (shouldCheck == null) {
             // default true
             shouldCheck = true;
@@ -122,9 +130,11 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
     }
 
     public void checkDefault() {
+        //如果有消费者，返回
         if (consumer != null) {
             return;
         }
+        //放置消费者
         setConsumer(ApplicationModel.getConfigManager().getDefaultConsumer().orElseGet(() -> {
             ConsumerConfig consumerConfig = new ConsumerConfig();
             consumerConfig.refresh();
@@ -132,7 +142,11 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
         }));
     }
 
+    /**
+     * 查看配置为空的部分，并尝试从其他配置中获取
+     */
     public void completeCompoundConfigs() {
+        //从消费者配置里填充应用配置、模块配置、注册中心配置、监控中心配置
         if (consumer != null) {
             if (application == null) {
                 setApplication(consumer.getApplication());
@@ -147,6 +161,7 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
                 setMonitor(consumer.getMonitor());
             }
         }
+        //从模块配置里填充注册中心配置、监控中心配置
         if (module != null) {
             if (registries == null) {
                 setRegistries(module.getRegistries());
@@ -155,6 +170,7 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
                 setMonitor(module.getMonitor());
             }
         }
+        //从应用配置里填充注册中心配置、监控中心配置
         if (application != null) {
             if (registries == null) {
                 setRegistries(application.getRegistries());
@@ -165,6 +181,10 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
         }
     }
 
+    /**
+     * 获取实际需要引用的接口类
+     * @return
+     */
     public Class<?> getActualInterface() {
         Class actualInterface = interfaceClass;
         if (interfaceClass == GenericService.class) {
@@ -268,28 +288,39 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
         return DUBBO + ".reference." + interfaceName;
     }
 
+    /**
+     * 解析映射文件，映射文件的优先级高于<dubbo:reference>
+     */
     public void resolveFile() {
         String resolve = System.getProperty(interfaceName);
         String resolveFile = null;
         if (StringUtils.isEmpty(resolve)) {
             resolveFile = System.getProperty("dubbo.resolve.file");
+            //没有映射文件就用dubbo默认的
             if (StringUtils.isEmpty(resolveFile)) {
+                //获取映射文件
                 File userResolveFile = new File(new File(System.getProperty("user.home")), "dubbo-resolve.properties");
+                //如果文件存在
                 if (userResolveFile.exists()) {
+                    //解析映射文件的绝对路径名
                     resolveFile = userResolveFile.getAbsolutePath();
                 }
             }
             if (resolveFile != null && resolveFile.length() > 0) {
+                //将映射文件读取成流，解析成配置
                 Properties properties = new Properties();
                 try (FileInputStream fis = new FileInputStream(new File(resolveFile))) {
+                    //添加为配置
                     properties.load(fis);
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to load " + resolveFile + ", cause: " + e.getMessage(), e);
                 }
 
+                //获取需要引入的接口配置
                 resolve = properties.getProperty(interfaceName);
             }
         }
+        //如果映射文件里有引入的接口配置，覆盖URL配置
         if (resolve != null && resolve.length() > 0) {
             url = resolve;
             if (logger.isWarnEnabled()) {
@@ -317,6 +348,10 @@ public abstract class ReferenceConfigBase<T> extends AbstractReferenceConfig {
         return URL.buildKey(interfaceName, group, version);
     }
 
+    /**
+     * TODO dubbo服务引用的入口
+     * @return
+     */
     public abstract T get();
 
     public abstract void destroy();

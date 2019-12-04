@@ -187,6 +187,10 @@ public class NetUtils {
         return HOST_ADDRESS;
     }
 
+    /**
+     * 从本地网卡中查找第一个有效IP
+     * @return
+     */
     public static String getLocalHost() {
         InetAddress address = getLocalAddress();
         return address == null ? LOCALHOST_VALUE : address.getHostAddress();
@@ -224,6 +228,7 @@ public class NetUtils {
     }
 
     /**
+     * 从本地网卡中查找第一个有效IP
      * Find first valid IP from local network card
      *
      * @return first valid local IP

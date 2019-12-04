@@ -220,30 +220,47 @@ public class ConfigValidationUtils {
         return registryList;
     }
 
+    /**
+     * 解析监控中心的URL
+     * @param interfaceConfig
+     * @param registryURL
+     * @return
+     */
     public static URL loadMonitor(AbstractInterfaceConfig interfaceConfig, URL registryURL) {
         Map<String, String> map = new HashMap<String, String>();
         map.put(INTERFACE_KEY, MonitorService.class.getName());
+        //添加运行期参数
         AbstractInterfaceConfig.appendRuntimeParameters(map);
+        //获取dubbo注册IP
         //set ip
         String hostToRegistry = ConfigUtils.getSystemProperty(DUBBO_IP_TO_REGISTRY);
         if (StringUtils.isEmpty(hostToRegistry)) {
+            //从本地网卡中查找第一个有效IP
             hostToRegistry = NetUtils.getLocalHost();
         } else if (NetUtils.isInvalidLocalHost(hostToRegistry)) {
+            //如果是本地IP就报错
             throw new IllegalArgumentException("Specified invalid registry ip from property:" +
                     DUBBO_IP_TO_REGISTRY + ", value:" + hostToRegistry);
         }
         map.put(REGISTER_IP_KEY, hostToRegistry);
 
+        //获取接口配置里的监控中心配置
         MonitorConfig monitor = interfaceConfig.getMonitor();
+        //获取接口配置里的应用配置
         ApplicationConfig application = interfaceConfig.getApplication();
         AbstractConfig.appendParameters(map, monitor);
         AbstractConfig.appendParameters(map, application);
+        //获取监控中心的IP
         String address = monitor.getAddress();
+        //获取系统配置监控中心的IP
         String sysaddress = System.getProperty("dubbo.monitor.address");
         if (sysaddress != null && sysaddress.length() > 0) {
+            //如果系统级别指定了监控中心的IP就进行覆盖
             address = sysaddress;
         }
+        //如果找到了监控中心的地址
         if (ConfigUtils.isNotEmpty(address)) {
+            //如果没有指定协议，先选择协议
             if (!map.containsKey(PROTOCOL_KEY)) {
                 if (getExtensionLoader(MonitorFactory.class).hasExtension(LOGSTAT_PROTOCOL)) {
                     map.put(PROTOCOL_KEY, LOGSTAT_PROTOCOL);
@@ -251,9 +268,12 @@ public class ConfigValidationUtils {
                     map.put(PROTOCOL_KEY, DUBBO_PROTOCOL);
                 }
             }
+            //转换成URL对象
             return UrlUtils.parseURL(address, map);
+        //如果没有找到监控中心的地址，这可能是一个注册中心或者服务发现中心
         } else if ((REGISTRY_PROTOCOL.equals(monitor.getProtocol()) || SERVICE_REGISTRY_PROTOCOL.equals(monitor.getProtocol()))
                 && registryURL != null) {
+            //转换成URL对象
             return URLBuilder.from(registryURL)
                     .setProtocol(DUBBO_PROTOCOL)
                     .addParameter(PROTOCOL_KEY, monitor.getProtocol())
@@ -389,21 +409,33 @@ public class ConfigValidationUtils {
         }
     }
 
+    /**
+     * 检查引用配置
+     * @param config
+     */
     public static void validateReferenceConfig(ReferenceConfig config) {
+        //检查服务引用的监听器
         checkMultiExtension(InvokerListener.class, "listener", config.getListener());
+        //检查服务引用的版本号
         checkKey(VERSION_KEY, config.getVersion());
+        //检查服务引用的组
         checkKey(GROUP_KEY, config.getGroup());
+        //检查服务引用的客户端
         checkName(CLIENT_KEY, config.getClient());
 
+        //检查抽象接口配置和接口配置的合法性
         validateAbstractInterfaceConfig(config);
 
+        //如果配置了注册中心
         List<RegistryConfig> registries = config.getRegistries();
         if (registries != null) {
             for (RegistryConfig registry : registries) {
+                //检查注册中心配置
                 validateRegistryConfig(registry);
             }
         }
 
+        //检查服务引用配置（其实啥也没做）
         ConsumerConfig consumerConfig = config.getConsumer();
         if (consumerConfig != null) {
             validateConsumerConfig(consumerConfig);
@@ -550,6 +582,7 @@ public class ConfigValidationUtils {
         checkExtension(Exchanger.class, EXCHANGER_KEY, config.getExchanger());
     }
 
+    //FIXME 可以优化
     public static void validateConsumerConfig(ConsumerConfig config) {
         if (config == null) {
             return;

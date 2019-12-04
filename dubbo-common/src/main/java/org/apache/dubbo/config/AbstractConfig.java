@@ -246,16 +246,25 @@ public abstract class AbstractConfig implements Serializable {
         }
     }
 
+    /**
+     * 将方法配置转换为异步方法调用配置
+     * @param methodConfig
+     * @return
+     */
     public static ConsumerModel.AsyncMethodInfo convertMethodConfig2AsyncInfo(MethodConfig methodConfig) {
+        //如果方法配置没有指定执行调用前、执行调用后、执行异常时的拦截中任何一个就直接返回
         if (methodConfig == null || (methodConfig.getOninvoke() == null && methodConfig.getOnreturn() == null && methodConfig.getOnthrow() == null)) {
             return null;
         }
 
+        //检查配置冲突
         //check config conflict
+        //如果不需要返回值但是指定了返回时和异常时的拦截器，就报错，这个时候不需要执行
         if (Boolean.FALSE.equals(methodConfig.isReturn()) && (methodConfig.getOnreturn() != null || methodConfig.getOnthrow() != null)) {
             throw new IllegalStateException("method config error : return attribute must be set true when onreturn or onthrow has been set.");
         }
 
+        //将同步的方法拦截器包装成异步的方法拦截器
         ConsumerModel.AsyncMethodInfo asyncMethodInfo = new ConsumerModel.AsyncMethodInfo();
 
         asyncMethodInfo.setOninvokeInstance(methodConfig.getOninvoke());
@@ -263,18 +272,24 @@ public abstract class AbstractConfig implements Serializable {
         asyncMethodInfo.setOnthrowInstance(methodConfig.getOnthrow());
 
         try {
+            //方法执行前拦截
             String oninvokeMethod = methodConfig.getOninvokeMethod();
             if (StringUtils.isNotEmpty(oninvokeMethod)) {
+                //检查方法是否合法并设置
                 asyncMethodInfo.setOninvokeMethod(getMethodByName(methodConfig.getOninvoke().getClass(), oninvokeMethod));
             }
 
+            //方法返回前拦截
             String onreturnMethod = methodConfig.getOnreturnMethod();
             if (StringUtils.isNotEmpty(onreturnMethod)) {
+                //检查方法是否合法并设置
                 asyncMethodInfo.setOnreturnMethod(getMethodByName(methodConfig.getOnreturn().getClass(), onreturnMethod));
             }
 
+            //方法异常前拦截
             String onthrowMethod = methodConfig.getOnthrowMethod();
             if (StringUtils.isNotEmpty(onthrowMethod)) {
+                //检查方法是否合法并设置
                 asyncMethodInfo.setOnthrowMethod(getMethodByName(methodConfig.getOnthrow().getClass(), onthrowMethod));
             }
         } catch (Exception e) {
