@@ -25,6 +25,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.REFERENCE_FILTER
 import static org.apache.dubbo.common.constants.CommonConstants.STUB_EVENT_KEY;
 
 /**
+ * 抽象引用接口配置类
  * AbstractConsumerConfig
  *
  * @export
@@ -34,29 +35,35 @@ public abstract class AbstractReferenceConfig extends AbstractInterfaceConfig {
 
     private static final long serialVersionUID = -2786526984373031126L;
 
+    // 引用配置默认值，将在引用配置属性未设置时生效
     // ======== Reference config default values, will take effect if reference's attribute is not set  ========
 
     /**
+     * 检查服务提供者是否存在，如果不存在，将尽快失败。
      * Check if service provider exists, if not exists, it will be fast fail
      */
     protected Boolean check;
 
     /**
+     * 是否初始化
      * Whether to eagle-init
      */
     protected Boolean init;
 
     /**
+     * 是否是泛化服务
      * Whether to use generic interface
      */
     protected String generic;
 
     /**
+     * 是否从当前JVM中查找引用的实例
      * Whether to find reference's instance from the current JVM
      */
     protected Boolean injvm;
 
     /**
+     * 是否延迟创建连接
      * Lazy create connection
      */
     protected Boolean lazy = false;
@@ -66,22 +73,26 @@ public abstract class AbstractReferenceConfig extends AbstractInterfaceConfig {
     protected Boolean sticky = false;
 
     /**
+     * 是否支持客户端本地代理类中的事件。
      * Whether to support event in stub.
      */
     //TODO solve merge problem
     protected Boolean stubevent;//= Constants.DEFAULT_STUB_EVENT;
 
     /**
+     * 引入服务的版本号
      * The remote service version the customer side will reference
      */
     protected String version;
 
     /**
+     * 组
      * The remote service group the customer side will reference
      */
     protected String group;
 
     /**
+     * 引入接口的应用或者服务名
      * declares which app or service this interface belongs to
      */
     protected String providedBy;

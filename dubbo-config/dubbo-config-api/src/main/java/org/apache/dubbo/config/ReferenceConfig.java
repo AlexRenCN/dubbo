@@ -79,7 +79,9 @@ import static org.apache.dubbo.rpc.Constants.LOCAL_PROTOCOL;
 import static org.apache.dubbo.rpc.cluster.Constants.REFER_KEY;
 
 /**
+ * 请避免将此课程用于任何新的应用程序
  * Please avoid using this class for any new application,
+ * 使用ReferenceConfigBase代替此类
  * use {@link ReferenceConfigBase} instead.
  */
 public class ReferenceConfig<T> extends ReferenceConfigBase<T> {

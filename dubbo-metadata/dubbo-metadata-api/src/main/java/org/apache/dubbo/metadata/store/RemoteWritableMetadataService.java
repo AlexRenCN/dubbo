@@ -76,6 +76,7 @@ public class RemoteWritableMetadataService implements WritableMetadataService {
     public void publishServiceDefinition(URL providerUrl) {
         try {
             String interfaceName = providerUrl.getParameter(INTERFACE_KEY);
+            //如果服务暴露者在协议中指定了接口名
             if (StringUtils.isNotEmpty(interfaceName)
                     && !ProtocolUtils.isGeneric(providerUrl.getParameter(GENERIC_KEY))) {
                 Class interfaceClass = Class.forName(interfaceName);
@@ -90,7 +91,7 @@ public class RemoteWritableMetadataService implements WritableMetadataService {
             //ignore error
             logger.error("publishProvider getServiceDescriptor error. providerUrl: " + providerUrl.toFullString(), e);
         }
-
+        //向后兼容性
         // backward compatibility
         publishProvider(providerUrl);
     }

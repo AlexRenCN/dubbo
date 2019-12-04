@@ -26,6 +26,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DEFAULT_METADATA
 import static org.apache.dubbo.common.extension.ExtensionLoader.getExtensionLoader;
 
 /**
+ * 扩展服务元数据并提供可以修改的本地服务元数据，用于Dubbo的使用者和提供者。
  * Local {@link MetadataService} that extends {@link MetadataService} and provides the modification, which is used for
  * Dubbo's consumers and providers.
  *
