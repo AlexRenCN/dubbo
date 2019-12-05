@@ -1,2 +1,3 @@
+# TODO 这里是dubbo spring配置文件xsd 标签规范
 http\://dubbo.apache.org/schema/dubbo/dubbo.xsd=META-INF/dubbo.xsd
 http\://code.alibabatech.com/schema/dubbo/dubbo.xsd=META-INF/compat/dubbo.xsd

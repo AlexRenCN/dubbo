@@ -107,14 +107,23 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    /**
+     * 获取类名的标签
+     * @param cls
+     * @return
+     */
     public static String getTagName(Class<?> cls) {
+        //使用类名
         String tag = cls.getSimpleName();
+        //匹配后缀名
         for (String suffix : SUFFIXES) {
             if (tag.endsWith(suffix)) {
+                //类名截取掉后缀名就是前缀名
                 tag = tag.substring(0, tag.length() - suffix.length());
                 break;
             }
         }
+        //改变驼峰命名样式，全部小写，用分隔符分离
         return StringUtils.camelToSplitName(tag, "-");
     }
 

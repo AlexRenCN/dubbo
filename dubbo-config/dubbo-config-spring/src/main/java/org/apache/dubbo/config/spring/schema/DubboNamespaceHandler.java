@@ -43,6 +43,7 @@ import org.w3c.dom.Element;
 import static com.alibaba.spring.util.AnnotatedBeanDefinitionRegistryUtils.registerBeans;
 
 /**
+ * Dubbo命名空间处理程序，用于处理Dubbo的配置文件
  * DubboNamespaceHandler
  *
  * @export
@@ -55,6 +56,7 @@ public class DubboNamespaceHandler extends NamespaceHandlerSupport implements Co
 
     @Override
     public void init() {
+        //在spring里，将对应的标签名和需要解析成的java对象进行绑定
         registerBeanDefinitionParser("application", new DubboBeanDefinitionParser(ApplicationConfig.class, true));
         registerBeanDefinitionParser("module", new DubboBeanDefinitionParser(ModuleConfig.class, true));
         registerBeanDefinitionParser("registry", new DubboBeanDefinitionParser(RegistryConfig.class, true));
