@@ -34,6 +34,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 启用dubbo配置
+ * 作为一个方便和收归的dubbo配置绑定默认行为，等于具有以下属性约定前缀的单个bean绑定：
  * As  a convenient and multiple {@link EnableDubboConfigBinding}
  * in default behavior , is equal to single bean bindings with below convention prefixes of properties:
  * <ul>
@@ -66,10 +68,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
+//TODO 将所有的dubbo配置注册到spring config里
 @Import(DubboConfigConfigurationRegistrar.class)
 public @interface EnableDubboConfig {
 
     /**
+     * 是否绑定到多个Spring bean。
      * It indicates whether binding to multiple Spring Beans.
      *
      * @return the default value is <code>false</code>

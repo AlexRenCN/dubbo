@@ -30,6 +30,7 @@ import static org.springframework.util.ObjectUtils.nullSafeEquals;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
+ * 通过Dubbo配置bean的设置其别名的后处理器类
  * A Post-Processor class to set the alias of Dubbo Config bean using its {@link AbstractConfig#getId()}
  *
  * @since 2.7.5

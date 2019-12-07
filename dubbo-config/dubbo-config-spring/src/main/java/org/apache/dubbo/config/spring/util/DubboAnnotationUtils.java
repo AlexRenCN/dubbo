@@ -79,6 +79,7 @@ public class DubboAnnotationUtils {
     }
 
     /**
+     *获取service接口
      * Resolve the {@link Class class} of Dubbo Service interface from the specified
      * {@link AnnotationAttributes annotation attributes} and annotated {@link Class class}.
      *
@@ -92,22 +93,28 @@ public class DubboAnnotationUtils {
 
         ClassLoader classLoader = defaultInterfaceClass != null ? defaultInterfaceClass.getClassLoader() : Thread.currentThread().getContextClassLoader();
 
+        //从service注解里获取指定的接口类interfaceClass
         Class<?> interfaceClass = getAttribute(attributes, "interfaceClass");
 
+        //如果找不到指定了接口类，就使用默认的接口类
         if (void.class.equals(interfaceClass)) { // default or set void.class for purpose.
 
             interfaceClass = null;
 
+            //获取接口类的名字
             String interfaceClassName = getAttribute(attributes, "interfaceName");
 
             if (hasText(interfaceClassName)) {
+                //检查能否从类加载器中获取到
                 if (ClassUtils.isPresent(interfaceClassName, classLoader)) {
+                    //根据类名解析成类
                     interfaceClass = resolveClassName(interfaceClassName, classLoader);
                 }
             }
 
         }
 
+        //兜底的接口是默认接口类里获取第一个接口
         if (interfaceClass == null && defaultInterfaceClass != null) {
             // Find all interfaces from the annotated class
             // To resolve an issue : https://github.com/apache/dubbo/issues/3251

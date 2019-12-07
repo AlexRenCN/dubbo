@@ -39,6 +39,7 @@ import org.springframework.core.Ordered;
 public interface DubboConfigBeanCustomizer extends ConfigurationBeanCustomizer, Ordered {
 
     /**
+     * 设置spring容器里 AbstractConfig bean对象属性
      * Customize {@link AbstractConfig Dubbo Config Bean}
      *
      * @param beanName        the name of {@link AbstractConfig Dubbo Config Bean}
@@ -46,6 +47,11 @@ public interface DubboConfigBeanCustomizer extends ConfigurationBeanCustomizer, 
      */
     void customize(String beanName, AbstractConfig dubboConfigBean);
 
+    /**
+     * 设置spring容器里 AbstractConfig bean对象属性
+     * @param beanName
+     * @param configurationBean
+     */
     @Override
     default void customize(String beanName, Object configurationBean) {
         if (configurationBean instanceof AbstractConfig) {

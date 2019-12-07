@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.config.spring.beans.factory.annotation;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.utils.Assert;
 import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.AbstractConfig;
@@ -47,6 +48,7 @@ import java.util.List;
 import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncludingAncestors;
 
 /**
+ * dubbo 配置绑定的 bean后置处理器
  * Dubbo Config Binding {@link BeanPostProcessor}
  *
  * @see EnableDubboConfigBinding
@@ -60,23 +62,40 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
     private final Log log = LogFactory.getLog(getClass());
 
     /**
+     * 配置属性的前缀
      * The prefix of Configuration Properties
      */
     private final String prefix;
 
     /**
+     * 绑定Bean名称
      * Binding Bean Name
      */
     private final String beanName;
 
+    /**
+     * dubbo spring配置接入接口
+     */
     private DubboConfigBinder dubboConfigBinder;
 
+    /**
+     * spring上下文
+     */
     private ApplicationContext applicationContext;
 
+    /**
+     * 类定义注册器
+     */
     private BeanDefinitionRegistry beanDefinitionRegistry;
 
+    /**
+     * 是否忽略未知属性
+     */
     private boolean ignoreUnknownFields = true;
 
+    /**
+     * 是否忽略类型异常
+     */
     private boolean ignoreInvalidFields = true;
 
     private List<DubboConfigBeanCustomizer> configBeanCustomizers = Collections.emptyList();
@@ -92,15 +111,25 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
         this.beanName = beanName;
     }
 
+    /**
+     * dubbo config 配置绑定，spring容器初始化bean之前的处理器
+     * @param bean
+     * @param beanName
+     * @return
+     * @throws BeansException
+     */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
+        //如果是在spring中注册AbstractConfig
         if (this.beanName.equals(beanName) && bean instanceof AbstractConfig) {
 
             AbstractConfig dubboConfig = (AbstractConfig) bean;
 
+            //用指定前缀绑定Dubbo Config对象
             bind(prefix, dubboConfig);
 
+            //设置spring容器里 AbstractConfig bean对象属性
             customize(beanName, dubboConfig);
 
         }
@@ -109,8 +138,14 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
 
     }
 
+    /**
+     * 用指定前缀绑定Dubbo Config对象
+     * @param prefix
+     * @param dubboConfig
+     */
     private void bind(String prefix, AbstractConfig dubboConfig) {
 
+        //用指定前缀绑定Dubbo Config对象。
         dubboConfigBinder.bind(prefix, dubboConfig);
 
         if (log.isInfoEnabled()) {
@@ -119,6 +154,11 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
         }
     }
 
+    /**
+     * 设置spring容器里 AbstractConfig bean对象属性
+     * @param beanName
+     * @param dubboConfig
+     */
     private void customize(String beanName, AbstractConfig dubboConfig) {
 
         for (DubboConfigBeanCustomizer customizer : configBeanCustomizers) {
@@ -173,31 +213,44 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
     @Override
     public void afterPropertiesSet() throws Exception {
 
+        //初始化dubbo spring配置接入接入
         initDubboConfigBinder();
 
+        //初始化配置加载顺序
         initConfigBeanCustomizers();
 
     }
 
+    /**
+     * 初始化dubbo spring配置接入接入
+     */
     private void initDubboConfigBinder() {
 
+        //如果还没有加载dubbo spring配置接入接口
         if (dubboConfigBinder == null) {
             try {
+                //从上下文中获取bean
                 dubboConfigBinder = applicationContext.getBean(DubboConfigBinder.class);
             } catch (BeansException ignored) {
                 if (log.isDebugEnabled()) {
                     log.debug("DubboConfigBinder Bean can't be found in ApplicationContext.");
                 }
+                //如果找不到dubbo的spring配置接入接口，就使用上下文的默认配置接入接口
                 // Use Default implementation
                 dubboConfigBinder = createDubboConfigBinder(applicationContext.getEnvironment());
             }
         }
 
+        //是否忽略未知属性
         dubboConfigBinder.setIgnoreUnknownFields(ignoreUnknownFields);
+        //是否忽略类型异常
         dubboConfigBinder.setIgnoreInvalidFields(ignoreInvalidFields);
 
     }
 
+    /**
+     * 初始化配置加载顺序，通过实现spring的order接口获得的
+     */
     private void initConfigBeanCustomizers() {
 
         Collection<DubboConfigBeanCustomizer> configBeanCustomizers =

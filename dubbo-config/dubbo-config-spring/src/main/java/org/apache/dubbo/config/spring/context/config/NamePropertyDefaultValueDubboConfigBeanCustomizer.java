@@ -28,6 +28,8 @@ import static com.alibaba.spring.util.ObjectUtils.of;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptor;
 
 /**
+ *
+ * DubboConfigBeanCustomizer默认name填充
  * {@link DubboConfigBeanCustomizer} for the default value for the "name" property that will be taken bean name
  * if absent.
  *
@@ -43,6 +45,7 @@ public class NamePropertyDefaultValueDubboConfigBeanCustomizer implements DubboC
     public static final String BEAN_NAME = "namePropertyDefaultValueDubboConfigBeanCustomizer";
 
     /**
+     * “name”属性的名称可能在目标类中不存在
      * The name of property that is "name" maybe is absent in target class
      */
     private static final String PROPERTY_NAME = "name";
@@ -52,23 +55,31 @@ public class NamePropertyDefaultValueDubboConfigBeanCustomizer implements DubboC
 
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor(dubboConfigBean.getClass(), PROPERTY_NAME);
 
+        //配置有name属性
         if (propertyDescriptor != null) { // "name" property is present
 
+            //获取方法的name
             Method getNameMethod = propertyDescriptor.getReadMethod();
 
+            //方法有name不用处理
             if (getNameMethod == null) { // if "getName" method is absent
                 return;
             }
 
+            //获取属性的name
             Object propertyValue = ReflectionUtils.invokeMethod(getNameMethod, dubboConfigBean);
 
+            //属性有name不用处理
             if (propertyValue != null) { // If The return value of "getName" method is not null
                 return;
             }
 
+            //通过属性名解析到set方法名
             Method setNameMethod = propertyDescriptor.getWriteMethod();
             if (setNameMethod != null) { // "setName" and "getName" methods are present
+                //保证set的参数是String类型，name只可能是String的
                 if (Arrays.equals(of(String.class), setNameMethod.getParameterTypes())) { // the param type is String
+                    //将bean name设置为“name”属性的值（namePropertyDefaultValueDubboConfigBeanCustomizer）
                     // set bean name to the value of the "name" property
                     ReflectionUtils.invokeMethod(setNameMethod, dubboConfigBean, beanName);
                 }

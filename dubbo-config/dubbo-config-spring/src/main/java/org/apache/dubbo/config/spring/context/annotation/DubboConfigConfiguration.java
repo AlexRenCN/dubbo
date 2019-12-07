@@ -33,6 +33,7 @@ import com.alibaba.spring.beans.factory.annotation.EnableConfigurationBeanBindin
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * dubbo 配置类
  * Dubbo {@link AbstractConfig Config} {@link Configuration}
  *
  * @revised 2.7.5
@@ -52,6 +53,7 @@ import org.springframework.context.annotation.Configuration;
 public class DubboConfigConfiguration {
 
     /**
+     * 单例的，不加S
      * Single Dubbo {@link AbstractConfig Config} Bean Binding
      */
     @EnableConfigurationBeanBindings({
@@ -71,6 +73,7 @@ public class DubboConfigConfiguration {
     }
 
     /**
+     * 多例的，加S
      * Multiple Dubbo {@link AbstractConfig Config} Bean Binding
      */
     @EnableConfigurationBeanBindings({

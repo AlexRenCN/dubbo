@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.config.spring.context.annotation;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.config.AbstractConfig;
 import org.apache.dubbo.config.spring.beans.factory.annotation.DubboConfigAliasPostProcessor;
 import org.apache.dubbo.config.spring.context.config.NamePropertyDefaultValueDubboConfigBeanCustomizer;
@@ -25,12 +26,14 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
+import sun.misc.Unsafe;
 
 import static com.alibaba.spring.util.AnnotatedBeanDefinitionRegistryUtils.registerBeans;
 import static com.alibaba.spring.util.BeanRegistrar.registerInfrastructureBean;
 import static org.apache.dubbo.config.spring.context.config.NamePropertyDefaultValueDubboConfigBeanCustomizer.BEAN_NAME;
 
 /**
+ * 将dubbo配置注册到spring config里
  * Dubbo {@link AbstractConfig Config} {@link ImportBeanDefinitionRegistrar register}, which order can be configured
  *
  * @see EnableDubboConfig
@@ -46,28 +49,35 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(
                 importingClassMetadata.getAnnotationAttributes(EnableDubboConfig.class.getName()));
 
+        //是否绑定到多个spring bean上
         boolean multiple = attributes.getBoolean("multiple");
 
+        //注册单个配置bean
         // Single Config Bindings
         registerBeans(registry, DubboConfigConfiguration.Single.class);
 
+        //注册多个配置bean
         if (multiple) { // Since 2.6.6 https://github.com/apache/dubbo/issues/3193
             registerBeans(registry, DubboConfigConfiguration.Multiple.class);
         }
 
+        //注册dubbo bean name 别名后置处理器
         // Register DubboConfigAliasPostProcessor
         registerDubboConfigAliasPostProcessor(registry);
 
+        // 设置
         // Register NamePropertyDefaultValueDubboConfigBeanCustomizer
         registerDubboConfigBeanCustomizers(registry);
 
     }
 
     private void registerDubboConfigBeanCustomizers(BeanDefinitionRegistry registry) {
+        //DubboConfigBeanCustomizer默认name填充
         registerInfrastructureBean(registry, BEAN_NAME, NamePropertyDefaultValueDubboConfigBeanCustomizer.class);
     }
 
     /**
+     * 注册dubbo bean name 别名后置处理器
      * Register {@link DubboConfigAliasPostProcessor}
      *
      * @param registry {@link BeanDefinitionRegistry}

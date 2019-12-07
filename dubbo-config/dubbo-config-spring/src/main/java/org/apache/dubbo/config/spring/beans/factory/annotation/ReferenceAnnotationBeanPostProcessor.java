@@ -51,6 +51,7 @@ import static org.apache.dubbo.config.spring.beans.factory.annotation.ServiceBea
 import static org.springframework.util.StringUtils.hasText;
 
 /**
+ * 针对带Reference注解的类，在spring注册Bean Definition时候的后置处理器
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
  * that Consumer service {@link Reference} annotated fields
  *
@@ -69,15 +70,27 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
      */
     private static final int CACHE_SIZE = Integer.getInteger(BEAN_NAME + ".cache.size", 32);
 
+    /**
+     * 引用接口名-引用对象缓存
+     */
     private final ConcurrentMap<String, ReferenceBean<?>> referenceBeanCache =
             new ConcurrentHashMap<>(CACHE_SIZE);
 
+    /**
+     * 引用接口名-引用对象反射器缓存
+     */
     private final ConcurrentHashMap<String, ReferenceBeanInvocationHandler> localReferenceBeanInvocationHandlerCache =
             new ConcurrentHashMap<>(CACHE_SIZE);
 
+    /**
+     * 使用属性引用接口的bean-引用对象反射器缓存
+     */
     private final ConcurrentMap<InjectionMetadata.InjectedElement, ReferenceBean<?>> injectedFieldReferenceBeanCache =
             new ConcurrentHashMap<>(CACHE_SIZE);
 
+    /**
+     * 使用方法引用接口的bean-引用对象反射器缓存
+     */
     private final ConcurrentMap<InjectionMetadata.InjectedElement, ReferenceBean<?>> injectedMethodReferenceBeanCache =
             new ConcurrentHashMap<>(CACHE_SIZE);
 
@@ -120,10 +133,22 @@ public class ReferenceAnnotationBeanPostProcessor extends AbstractAnnotationBean
         return Collections.unmodifiableMap(injectedMethodReferenceBeanCache);
     }
 
+    /**
+     * 获取需要注入的引用接口
+     * @param attributes
+     * @param bean
+     * @param beanName
+     * @param injectedType
+     * @param injectedElement
+     * @return
+     * @throws Exception
+     */
     @Override
     protected Object doGetInjectedBean(AnnotationAttributes attributes, Object bean, String beanName, Class<?> injectedType,
                                        InjectionMetadata.InjectedElement injectedElement) throws Exception {
         /**
+         * TODO 1
+         * 获取引用接口的名称
          * The name of bean that annotated Dubbo's {@link Service @Service} in local Spring {@link ApplicationContext}
          */
         String referencedBeanName = buildReferencedBeanName(attributes, injectedType);
