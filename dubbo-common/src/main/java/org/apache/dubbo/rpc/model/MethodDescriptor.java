@@ -26,17 +26,32 @@ import static org.apache.dubbo.common.constants.CommonConstants.$INVOKE;
 import static org.apache.dubbo.common.constants.CommonConstants.$INVOKE_ASYNC;
 
 /**
- *
+ * 单个方法的信息
  */
 public class MethodDescriptor {
     private final Method method;
     //    private final boolean isCallBack;
 //    private final boolean isFuture;
+    /**
+     * 参数类型（字符类型保存）
+     */
     private final String paramDesc;
+    /**
+     * 用于兼容的参数信息
+     */
     // duplicate filed as paramDesc, but with different format.
     private final String[] compatibleParamSignatures;
+    /**
+     * 参数类型
+     */
     private final Class<?>[] parameterClasses;
+    /**
+     * 返回类
+     */
     private final Class<?> returnClass;
+    /**
+     * 返回类型
+     */
     private final Type[] returnTypes;
     private final String methodName;
     private final boolean generic;

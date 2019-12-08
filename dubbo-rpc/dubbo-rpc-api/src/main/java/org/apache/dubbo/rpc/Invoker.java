@@ -19,6 +19,8 @@ package org.apache.dubbo.rpc;
 import org.apache.dubbo.common.Node;
 
 /**
+ * TODO 【dubbo域】一个可执行体，属于实体域
+ * 调用者（调用接口，原型模式，线程安全的）
  * Invoker. (API/SPI, Prototype, ThreadSafe)
  *
  * @see org.apache.dubbo.rpc.Protocol#refer(Class, org.apache.dubbo.common.URL)
@@ -28,6 +30,7 @@ import org.apache.dubbo.common.Node;
 public interface Invoker<T> extends Node {
 
     /**
+     * 获取服务接口
      * get service interface.
      *
      * @return service interface.
@@ -35,6 +38,7 @@ public interface Invoker<T> extends Node {
     Class<T> getInterface();
 
     /**
+     * 调用接口
      * invoke.
      *
      * @param invocation

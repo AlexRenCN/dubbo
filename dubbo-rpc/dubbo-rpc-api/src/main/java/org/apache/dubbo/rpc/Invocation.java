@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
+ * TODO 【dubbo域】持有调用过程中的参数、方法签名、附加参数，属于会话域
+ * 调用过程（调用接口，原型模式，线程不安全的）
  * Invocation. (API, Prototype, NonThreadSafe)
  *
  * @serial Don't change the class name and package name.
@@ -31,6 +33,7 @@ public interface Invocation {
     String getTargetServiceUniqueName();
 
     /**
+     * 获取方法名
      * get method name.
      *
      * @return method name.
@@ -40,12 +43,14 @@ public interface Invocation {
 
 
     /**
+     * 获取接口名
      * get the interface name
      * @return
      */
     String getServiceName();
 
     /**
+     * 获取参数类型
      * get parameter types.
      *
      * @return parameter types.
@@ -54,6 +59,7 @@ public interface Invocation {
     Class<?>[] getParameterTypes();
 
     /**
+     * 获取参数的签名，用字符串数组表示。
      * get parameter's signature, string representation of parameter types.
      *
      * @return parameter's signature
@@ -65,6 +71,7 @@ public interface Invocation {
     }
 
     /**
+     * 获取参数
      * get arguments.
      *
      * @return arguments.
@@ -73,6 +80,7 @@ public interface Invocation {
     Object[] getArguments();
 
     /**
+     * 获取附加值
      * get attachments.
      *
      * @return attachments.
@@ -85,6 +93,7 @@ public interface Invocation {
     void setAttachmentIfAbsent(String key, Object value);
 
     /**
+     * 根据指定的键获取附加值
      * get attachment by key.
      *
      * @return attachment value.
@@ -93,6 +102,7 @@ public interface Invocation {
     Object getAttachment(String key);
 
     /**
+     * 根据指定的键获取附加值，如果找不到就使用默认值
      * get attachment by key with default value.
      *
      * @return attachment value.
@@ -101,6 +111,7 @@ public interface Invocation {
     Object getAttachment(String key, Object defaultValue);
 
     /**
+     * 获取当前上下文的调用者
      * get the invoker in current context.
      *
      * @return invoker.

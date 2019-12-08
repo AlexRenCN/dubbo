@@ -17,7 +17,7 @@
 package org.apache.dubbo.rpc;
 
 /**
- * 服务暴露工具（API/SPI，原型模式，线程安全）
+ * 服务暴露工具（API/SPI，原型模式，线程安全），为协议提供调用者
  * Exporter. (API/SPI, Prototype, ThreadSafe)
  *
  * @see org.apache.dubbo.rpc.Protocol#export(Invoker)
@@ -27,6 +27,7 @@ package org.apache.dubbo.rpc;
 public interface Exporter<T> {
 
     /**
+     * 获取调用者
      * get invoker.
      *
      * @return invoker
@@ -34,6 +35,7 @@ public interface Exporter<T> {
     Invoker<T> getInvoker();
 
     /**
+     * 销毁暴露的服务
      * unexport.
      * <p>
      * <code>

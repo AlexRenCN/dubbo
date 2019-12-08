@@ -31,7 +31,7 @@ public interface ProxyFactory {
 
     /**
      * 创建代理。
-     * create proxy.
+     * create proxy，在引用服务时调用。
      *
      * @param invoker
      * @return proxy
@@ -40,7 +40,8 @@ public interface ProxyFactory {
     <T> T getProxy(Invoker<T> invoker) throws RpcException;
 
     /**
-     * create proxy.
+     * 创建代理
+     * create proxy，在引用服务时调用。
      *
      * @param invoker
      * @return proxy
@@ -49,6 +50,7 @@ public interface ProxyFactory {
     <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException;
 
     /**
+     * 创建调用者，在暴露服务时调用。
      * create invoker.
      *
      * @param <T>

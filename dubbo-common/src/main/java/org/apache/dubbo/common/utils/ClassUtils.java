@@ -81,6 +81,7 @@ public class ClassUtils {
     }
 
     /**
+     * 获取合适的类加载器
      * get class loader
      *
      * @param clazz
@@ -89,18 +90,23 @@ public class ClassUtils {
     public static ClassLoader getClassLoader(Class<?> clazz) {
         ClassLoader cl = null;
         try {
+            //优先使用当前线程的类加载器
             cl = Thread.currentThread().getContextClassLoader();
         } catch (Throwable ex) {
             // Cannot access thread context ClassLoader - falling back to system class loader...
         }
         if (cl == null) {
+            //使用用户类的类加载器
             // No thread context class loader -> use class loader of this class.
             cl = clazz.getClassLoader();
             if (cl == null) {
+                //使用bootstrap类加载器
                 // getClassLoader() returning null indicates the bootstrap ClassLoader
                 try {
+                    //获取系统类加载器
                     cl = ClassLoader.getSystemClassLoader();
                 } catch (Throwable ex) {
+                    //啥类加载器也没有不是扯淡么
                     // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
                 }
             }

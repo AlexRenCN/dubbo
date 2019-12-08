@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.common.extension;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.logger.Logger;
 import org.apache.dubbo.common.logger.LoggerFactory;
@@ -75,6 +76,7 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 是否有Adaptive注解
      * test if given type has at least one method annotated with <code>SPI</code>
      */
     private boolean hasAdaptiveMethod() {
@@ -82,21 +84,27 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 生成并返回类代码
      * generate and return class code
      */
     public String generate() {
+        // 查看是否有Adaptive注解，如果没有这个注解，不需要生成自适应类，抛出异常
         // no need to generate adaptive class since there's no adaptive method found.
         if (!hasAdaptiveMethod()) {
             throw new IllegalStateException("No adaptive method exist on extension " + type.getName() + ", refuse to create the adaptive class!");
         }
 
         StringBuilder code = new StringBuilder();
+        //生成Package
         code.append(generatePackageInfo());
+        //生成Import
         code.append(generateImports());
+        //生成类声明
         code.append(generateClassDeclaration());
 
         Method[] methods = type.getMethods();
         for (Method method : methods) {
+            //生成方法签名
             code.append(generateMethod(method));
         }
         code.append("}");
@@ -108,6 +116,7 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 生成package信息
      * generate package info
      */
     private String generatePackageInfo() {
@@ -115,6 +124,7 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 生成imports信息
      * generate imports
      */
     private String generateImports() {
@@ -122,6 +132,7 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 生成类声明
      * generate class declaration
      */
     private String generateClassDeclaration() {
@@ -151,6 +162,7 @@ public class AdaptiveClassCodeGenerator {
     }
 
     /**
+     * 生成方法签名
      * generate method declaration
      */
     private String generateMethod(Method method) {

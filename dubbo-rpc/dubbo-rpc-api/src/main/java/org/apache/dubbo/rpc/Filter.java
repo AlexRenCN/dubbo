@@ -19,6 +19,9 @@ package org.apache.dubbo.rpc;
 import org.apache.dubbo.common.extension.SPI;
 
 /**
+ * TODO 【dubbo域】过滤器
+ * 用于拦截服务提供者提供服务和使用者的调用的扩展，此外，dubbo中的大多数函数都是基于相同的机制实现的。
+ * 由于每次调用远程方法时，也会执行过滤器，因此在添加更多筛选器之前，应考虑相应的性能损耗。
  * Extension for intercepting the invocation for both service provider and consumer, furthermore, most of
  * functions in dubbo are implemented base on the same mechanism. Since every time when remote method is
  * invoked, the filter extensions will be executed too, the corresponding penalty should be considered before
@@ -43,6 +46,7 @@ import org.apache.dubbo.common.extension.SPI;
 @SPI
 public interface Filter {
     /**
+     * 确保在实现中调用Invoker的invoke方法
      * Make sure call invoker.invoke() in your implementation.
      */
     Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException;

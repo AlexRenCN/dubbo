@@ -30,7 +30,8 @@ import java.util.function.Function;
 
 /**
  * (API, Prototype, NonThreadSafe)
- *
+ * TODO 【dubbo域】一个远程调用的返回结果，属于会话域
+ * 一个远程调用的结果
  * An RPC {@link Result}.
  *
  * Known implementations are:
@@ -45,6 +46,7 @@ import java.util.function.Function;
 public interface Result extends Serializable {
 
     /**
+     * 获取调用结果
      * Get invoke result.
      *
      * @return result. if no result return null.
@@ -54,6 +56,7 @@ public interface Result extends Serializable {
     void setValue(Object value);
 
     /**
+     * 获取异常
      * Get exception.
      *
      * @return exception. if no exception return null.
@@ -63,6 +66,7 @@ public interface Result extends Serializable {
     void setException(Throwable t);
 
     /**
+     * 是否存在异常
      * Has exception.
      *
      * @return has exception.
@@ -70,6 +74,7 @@ public interface Result extends Serializable {
     boolean hasException();
 
     /**
+     * 获取调用的返回值或者异常
      * Recreate.
      * <p>
      * <code>
@@ -86,6 +91,7 @@ public interface Result extends Serializable {
     Object recreate() throws Throwable;
 
     /**
+     * 获取附加信息集合
      * get attachments.
      *
      * @return attachments.
@@ -93,6 +99,7 @@ public interface Result extends Serializable {
     Map<String, Object> getAttachments();
 
     /**
+     * 将指定的映射添加到该实例中的现有附加信息中。
      * Add the specified map to existing attachments in this instance.
      *
      * @param map
@@ -100,6 +107,7 @@ public interface Result extends Serializable {
     void addAttachments(Map<String, Object> map);
 
     /**
+     * 将指定的映射集合添加到该实例中的现有附加信息中
      * Replace the existing attachments with the specified param.
      *
      * @param map
@@ -107,6 +115,7 @@ public interface Result extends Serializable {
     void setAttachments(Map<String, Object> map);
 
     /**
+     * 用指定的键获取附加信息
      * get attachment by key.
      *
      * @return attachment value.
@@ -114,6 +123,7 @@ public interface Result extends Serializable {
     Object getAttachment(String key);
 
     /**
+     * 用指定的键获取附加信息，否则使用默认值
      * get attachment by key with default value.
      *
      * @return attachment value.
@@ -123,8 +133,10 @@ public interface Result extends Serializable {
     void setAttachment(String key, Object value);
 
     /**
+     * 添加可在RPC调用完成时触发的回调。
      * Add a callback which can be triggered when the RPC call finishes.
      * <p>
+     * 正如方法名所暗示的，这个方法将保证在调用启动时的相同上下文下触发回调
      * Just as the method name implies, this method will guarantee the callback being triggered under the same context as when the call was started,
      * see implementation in {@link Result#whenCompleteWithContext(BiConsumer)}
      *

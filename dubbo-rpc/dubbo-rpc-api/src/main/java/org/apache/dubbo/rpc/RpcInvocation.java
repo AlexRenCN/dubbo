@@ -42,6 +42,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.VERSION_KEY;
 import static org.apache.dubbo.rpc.Constants.TOKEN_KEY;
 
 /**
+ * RPC调用。
  * RPC Invocation.
  *
  * @serial Don't change the class name and properties.
@@ -82,22 +83,29 @@ public class RpcInvocation implements Invocation, Serializable {
                 invocation.getInvoker());
         if (invoker != null) {
             URL url = invoker.getUrl();
+            //请求地址
             setAttachment(PATH_KEY, url.getPath());
+            //接口
             if (url.hasParameter(INTERFACE_KEY)) {
                 setAttachment(INTERFACE_KEY, url.getParameter(INTERFACE_KEY));
             }
+            //所属组
             if (url.hasParameter(GROUP_KEY)) {
                 setAttachment(GROUP_KEY, url.getParameter(GROUP_KEY));
             }
+            //版本
             if (url.hasParameter(VERSION_KEY)) {
                 setAttachment(VERSION_KEY, url.getParameter(VERSION_KEY, "0.0.0"));
             }
+            //超时时间
             if (url.hasParameter(TIMEOUT_KEY)) {
                 setAttachment(TIMEOUT_KEY, url.getParameter(TIMEOUT_KEY));
             }
+            //令牌
             if (url.hasParameter(TOKEN_KEY)) {
                 setAttachment(TOKEN_KEY, url.getParameter(TOKEN_KEY));
             }
+            //应用信息
             if (url.hasParameter(APPLICATION_KEY)) {
                 setAttachment(APPLICATION_KEY, url.getParameter(APPLICATION_KEY));
             }
@@ -140,14 +148,20 @@ public class RpcInvocation implements Invocation, Serializable {
     }
 
     private void initParameterDesc() {
+        //获取注册服务的集合
         ServiceRepository repository = ApplicationModel.getServiceRepository();
         if (StringUtils.isNotEmpty(serviceName)) {
+            //获取单个接口的信息
             ServiceDescriptor serviceDescriptor = repository.lookupService(serviceName);
             if (serviceDescriptor != null) {
+                //获取单个接口的信息
                 MethodDescriptor methodDescriptor = serviceDescriptor.getMethod(methodName, parameterTypes);
                 if (methodDescriptor != null) {
+                    //将参数类型保存在RPC调用器中
                     this.parameterTypesDesc = methodDescriptor.getParamDesc();
+                    //将兼容版本的参数类型保存在RPC调用器中
                     this.compatibleParamSignatures = methodDescriptor.getCompatibleParamSignatures();
+                    //将返回类型保存在RPC调用器中
                     this.returnTypes = methodDescriptor.getReturnTypes();
                 }
             }

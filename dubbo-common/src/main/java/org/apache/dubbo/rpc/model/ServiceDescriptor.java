@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 单个接口的信息
  * ServiceModel和ServiceMetadata在某种程度上彼此重复。
  * ServiceModel and ServiceMetadata are to some extend duplicated with each other.
  * 我们将来应该合并他们。
