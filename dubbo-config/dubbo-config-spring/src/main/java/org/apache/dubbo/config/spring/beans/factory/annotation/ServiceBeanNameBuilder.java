@@ -30,6 +30,7 @@ import static org.apache.dubbo.config.spring.util.DubboAnnotationUtils.resolveIn
 import static org.springframework.core.annotation.AnnotationUtils.getAnnotationAttributes;
 
 /**
+ * dubbo接口类构建起
  * Dubbo {@link Service @Service} Bean Builder
  *
  * @see Service

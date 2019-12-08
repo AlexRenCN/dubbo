@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContextAware;
 import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncludingAncestors;
 
 /**
+ * 引用接口的工厂类
  * ReferenceFactoryBean
  */
 public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,

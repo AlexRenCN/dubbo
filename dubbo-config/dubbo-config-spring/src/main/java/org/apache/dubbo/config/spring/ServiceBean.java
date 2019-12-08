@@ -32,6 +32,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
+ * 接口的工厂类
  * ServiceFactoryBean
  *
  * @export
@@ -103,20 +104,24 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     }
 
     /**
+     * 服务导出后
      * @since 2.6.5
      */
     @Override
     public void exported() {
         super.exported();
+        //发布服务对外暴露的事件
         // Publish ServiceBeanExportedEvent
         publishExportEvent();
     }
 
     /**
+     * 发布服务对外暴露的事件
      * @since 2.6.5
      */
     private void publishExportEvent() {
         ServiceBeanExportedEvent exportEvent = new ServiceBeanExportedEvent(this);
+        //在当前上下文中发布服务对外暴露的事件
         applicationEventPublisher.publishEvent(exportEvent);
     }
 

@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 /**
+ * 一个接口对外暴露的事件
  * A {@link ApplicationEvent} after {@link ServiceBean} {@link ServiceBean#export() export} invocation
  *
  * @see ApplicationEvent
