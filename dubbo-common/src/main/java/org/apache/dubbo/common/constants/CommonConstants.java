@@ -160,6 +160,9 @@ public interface CommonConstants {
 
     String FILE_KEY = "file";
 
+    /**
+     * Dubbo_JStack.log文件目录
+     */
     String DUMP_DIRECTORY = "dump.directory";
 
     String CLASSIFIER_KEY = "classifier";

@@ -38,6 +38,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.THREADS_KEY;
 import static org.apache.dubbo.common.constants.CommonConstants.THREAD_NAME_KEY;
 
 /**
+ * 这个线程池是自调整的。线程将在空闲一分钟后被回收，并为即将到来的请求创建新线程。
  * This thread pool is self-tuned. Thread will be recycled after idle for one minute, and new thread will be created for
  * the upcoming request.
  *
@@ -47,6 +48,7 @@ public class CachedThreadPool implements ThreadPool {
 
     @Override
     public Executor getExecutor(URL url) {
+        //获取URL对象里指定的线程池信息：线程池命名前缀、核心线程数、最大线程数、等待队列、线程存活时间
         String name = url.getParameter(THREAD_NAME_KEY, DEFAULT_THREAD_NAME);
         int cores = url.getParameter(CORE_THREADS_KEY, DEFAULT_CORE_THREADS);
         int threads = url.getParameter(THREADS_KEY, Integer.MAX_VALUE);

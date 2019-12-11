@@ -25,14 +25,20 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 自适应的dubbo扩展类工厂
+ * Adaptive注解让他有了自适应能力
  * AdaptiveExtensionFactory
  */
 @Adaptive
 public class AdaptiveExtensionFactory implements ExtensionFactory {
 
+    /**
+     * dubbo扩展类工厂集合
+     */
     private final List<ExtensionFactory> factories;
 
     public AdaptiveExtensionFactory() {
+        //根据扩展类接口，获取dubbo扩展类实现
         ExtensionLoader<ExtensionFactory> loader = ExtensionLoader.getExtensionLoader(ExtensionFactory.class);
         List<ExtensionFactory> list = new ArrayList<ExtensionFactory>();
         for (String name : loader.getSupportedExtensions()) {
@@ -41,11 +47,21 @@ public class AdaptiveExtensionFactory implements ExtensionFactory {
         factories = Collections.unmodifiableList(list);
     }
 
+    /**
+     * 获取自适应的dubbo扩展类
+     * @param type object type.
+     * @param name object name.
+     * @param <T>
+     * @return
+     */
     @Override
     public <T> T getExtension(Class<T> type, String name) {
+        //循环所有的dubbo扩展类工厂
         for (ExtensionFactory factory : factories) {
+            //用每个工厂进行尝试
             T extension = factory.getExtension(type, name);
             if (extension != null) {
+                //能创建就直接返回
                 return extension;
             }
         }

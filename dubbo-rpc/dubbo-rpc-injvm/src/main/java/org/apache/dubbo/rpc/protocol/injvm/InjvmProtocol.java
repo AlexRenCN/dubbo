@@ -28,6 +28,7 @@ import org.apache.dubbo.rpc.protocol.AbstractProtocol;
 import org.apache.dubbo.rpc.support.ProtocolUtils;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static org.apache.dubbo.rpc.Constants.SCOPE_KEY;
 import static org.apache.dubbo.rpc.Constants.SCOPE_LOCAL;
@@ -36,13 +37,24 @@ import static org.apache.dubbo.rpc.Constants.GENERIC_KEY;
 import static org.apache.dubbo.rpc.Constants.LOCAL_PROTOCOL;
 
 /**
+ * 本地jvm协议类
  * InjvmProtocol
  */
 public class InjvmProtocol extends AbstractProtocol implements Protocol {
 
+    /**
+     * 协议名
+     */
     public static final String NAME = LOCAL_PROTOCOL;
 
+    /**
+     * 默认规则
+     */
     public static final int DEFAULT_PORT = 0;
+
+    /**
+     * 单例对象
+     */
     private static InjvmProtocol INSTANCE;
 
     public InjvmProtocol() {
@@ -50,7 +62,9 @@ public class InjvmProtocol extends AbstractProtocol implements Protocol {
     }
 
     public static InjvmProtocol getInjvmProtocol() {
+        //获取单例对象
         if (INSTANCE == null) {
+            //获取dubbo，本地jvm协议扩展实现类
             ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(InjvmProtocol.NAME); // load
         }
         return INSTANCE;
@@ -89,6 +103,7 @@ public class InjvmProtocol extends AbstractProtocol implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+        //根据URL获取需要暴露的导出器
         return new InjvmExporter<T>(invoker, invoker.getUrl().getServiceKey(), exporterMap);
     }
 

@@ -35,6 +35,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.THREADS_KEY;
 import static org.apache.dubbo.common.constants.CommonConstants.THREAD_NAME_KEY;
 
 /**
+ * 创建一个固定大小的线程池
  * Creates a thread pool that reuses a fixed number of threads
  *
  * @see java.util.concurrent.Executors#newFixedThreadPool(int)
@@ -43,6 +44,7 @@ public class FixedThreadPool implements ThreadPool {
 
     @Override
     public Executor getExecutor(URL url) {
+        //获取URL对象里指定的线程池信息：线程池命名前缀、固定线程数量、等待队列
         String name = url.getParameter(THREAD_NAME_KEY, DEFAULT_THREAD_NAME);
         int threads = url.getParameter(THREADS_KEY, DEFAULT_THREADS);
         int queues = url.getParameter(QUEUES_KEY, DEFAULT_QUEUES);

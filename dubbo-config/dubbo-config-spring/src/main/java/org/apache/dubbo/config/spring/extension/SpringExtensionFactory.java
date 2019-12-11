@@ -34,6 +34,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import java.util.Set;
 
 /**
+ * spring dubbo扩展类工厂
  * SpringExtensionFactory
  */
 public class SpringExtensionFactory implements ExtensionFactory {
@@ -68,12 +69,15 @@ public class SpringExtensionFactory implements ExtensionFactory {
     @SuppressWarnings("unchecked")
     public <T> T getExtension(Class<T> type, String name) {
 
+        //如果是SPI接口，不应该处理
         //SPI should be get from SpiExtensionFactory
         if (type.isInterface() && type.isAnnotationPresent(SPI.class)) {
             return null;
         }
 
+        //从所有上下文里尝试加载
         for (ApplicationContext context : CONTEXTS) {
+            //获取具体dubbo扩展类的实现类
             T bean = BeanFactoryUtils.getOptionalBean(context, name, type);
             if (bean != null) {
                 return bean;

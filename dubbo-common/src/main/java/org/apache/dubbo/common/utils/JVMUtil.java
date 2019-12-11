@@ -23,7 +23,16 @@ import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
+/**
+ * 记录栈信息
+ */
 public class JVMUtil {
+
+    /**
+     * Java虚拟机线程系统的管理接口。记录所有栈的快照
+     * @param stream
+     * @throws Exception
+     */
     public static void jstack(OutputStream stream) throws Exception {
         ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
         for (ThreadInfo threadInfo : threadMxBean.dumpAllThreads(true, true)) {
@@ -31,6 +40,11 @@ public class JVMUtil {
         }
     }
 
+    /**
+     * 获取单个栈的快照
+     * @param threadInfo
+     * @return
+     */
     private static String getThreadDumpString(ThreadInfo threadInfo) {
         StringBuilder sb = new StringBuilder("\"" + threadInfo.getThreadName() + "\"" +
                 " Id=" + threadInfo.getThreadId() + " " +

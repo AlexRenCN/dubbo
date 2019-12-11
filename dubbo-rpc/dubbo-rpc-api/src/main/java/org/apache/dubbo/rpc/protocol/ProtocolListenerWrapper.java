@@ -36,6 +36,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.EXPORTER_LISTENE
 import static org.apache.dubbo.common.constants.CommonConstants.INVOKER_LISTENER_KEY;
 
 /**
+ * 监听器暴露
  * ListenerProtocol
  */
 public class ProtocolListenerWrapper implements Protocol {
@@ -56,9 +57,12 @@ public class ProtocolListenerWrapper implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+        //如果是注册中心监听器
         if (UrlUtils.isRegistry(invoker.getUrl())) {
+            //直接暴露
             return protocol.export(invoker);
         }
+        //根据URL获取激活的监听器，并进行导出
         return new ListenerExporterWrapper<T>(protocol.export(invoker),
                 Collections.unmodifiableList(ExtensionLoader.getExtensionLoader(ExporterListener.class)
                         .getActivateExtension(invoker.getUrl(), EXPORTER_LISTENER_KEY)));

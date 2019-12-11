@@ -19,17 +19,21 @@ package org.apache.dubbo.common.extension.factory;
 import org.apache.dubbo.common.extension.ExtensionFactory;
 import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.apache.dubbo.common.extension.SPI;
+import sun.misc.Unsafe;
 
 /**
+ * SPI  dubbo扩展类工厂
  * SpiExtensionFactory
  */
 public class SpiExtensionFactory implements ExtensionFactory {
 
     @Override
     public <T> T getExtension(Class<T> type, String name) {
+        //如果是SPI接口
         if (type.isInterface() && type.isAnnotationPresent(SPI.class)) {
             ExtensionLoader<T> loader = ExtensionLoader.getExtensionLoader(type);
             if (!loader.getSupportedExtensions().isEmpty()) {
+                //加载扩展对象
                 return loader.getAdaptiveExtension();
             }
         }

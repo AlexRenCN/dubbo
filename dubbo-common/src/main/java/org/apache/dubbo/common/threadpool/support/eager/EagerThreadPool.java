@@ -36,14 +36,18 @@ import static org.apache.dubbo.common.constants.CommonConstants.THREADS_KEY;
 import static org.apache.dubbo.common.constants.CommonConstants.THREAD_NAME_KEY;
 
 /**
+ * 紧急线程池
  * EagerThreadPool
+ * 当核心线程都处于繁忙状态时，
  * When the core threads are all in busy,
+ * 创建新线程，而不是将任务放入阻塞队列。
  * create new thread instead of putting task into blocking queue.
  */
 public class EagerThreadPool implements ThreadPool {
 
     @Override
     public Executor getExecutor(URL url) {
+        //获取URL对象里指定的线程池信息：线程池命名前缀、核心线程数、最大线程数、等待队列、线程存活时间
         String name = url.getParameter(THREAD_NAME_KEY, DEFAULT_THREAD_NAME);
         int cores = url.getParameter(CORE_THREADS_KEY, DEFAULT_CORE_THREADS);
         int threads = url.getParameter(THREADS_KEY, Integer.MAX_VALUE);

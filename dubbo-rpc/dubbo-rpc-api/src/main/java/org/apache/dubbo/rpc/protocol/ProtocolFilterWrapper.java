@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.rpc.protocol;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.ExtensionLoader;
@@ -36,6 +37,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.REFERENCE_FILTER
 import static org.apache.dubbo.common.constants.CommonConstants.SERVICE_FILTER_KEY;
 
 /**
+ * 过滤器暴露
  * ListenerProtocol
  */
 public class ProtocolFilterWrapper implements Protocol {
@@ -49,14 +51,25 @@ public class ProtocolFilterWrapper implements Protocol {
         this.protocol = protocol;
     }
 
+    /**
+     * 创建过滤器的执行器
+     * @param invoker
+     * @param key
+     * @param group
+     * @param <T>
+     * @return
+     */
     private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String key, String group) {
         Invoker<T> last = invoker;
+        //根据URL获取激活的dubbo扩展类
         List<Filter> filters = ExtensionLoader.getExtensionLoader(Filter.class).getActivateExtension(invoker.getUrl(), key, group);
 
+        //如果有激活的扩展类
         if (!filters.isEmpty()) {
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final Filter filter = filters.get(i);
                 final Invoker<T> next = last;
+                //将过滤器Filter转换为执行器Invoker
                 last = new Invoker<T>() {
 
                     @Override
@@ -137,9 +150,12 @@ public class ProtocolFilterWrapper implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+        //如果是注册中心过滤器
         if (UrlUtils.isRegistry(invoker.getUrl())) {
+            //直接暴露服务
             return protocol.export(invoker);
         }
+        //创建过滤器的执行器，并暴露服务
         return protocol.export(buildInvokerChain(invoker, SERVICE_FILTER_KEY, CommonConstants.PROVIDER));
     }
 

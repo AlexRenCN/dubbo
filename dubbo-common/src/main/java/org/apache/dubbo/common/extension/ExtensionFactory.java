@@ -17,12 +17,15 @@
 package org.apache.dubbo.common.extension;
 
 /**
+ * dubbo扩展类工厂
+ * 扩展工厂本身也是一个dubbo扩展类
  * ExtensionFactory
  */
 @SPI
 public interface ExtensionFactory {
 
     /**
+     * 获取扩展类
      * Get extension.
      *
      * @param type object type.
