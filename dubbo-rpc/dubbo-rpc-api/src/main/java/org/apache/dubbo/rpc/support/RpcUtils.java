@@ -103,24 +103,37 @@ public class RpcUtils {
     }
 
     /**
+     * 在异步操作中添加调用id
+     * 支持幂等操作；调用id将会被添加到异步操作中
      * Idempotent operation: invocation id will be added in async operation by default
      *
      * @param url
      * @param inv
      */
     public static void attachInvocationIdIfAsync(URL url, Invocation inv) {
+        //如果需要添加调用id 且 当前没有调用id 且 当前是个RPC调用
         if (isAttachInvocationId(url, inv) && getInvocationId(inv) == null && inv instanceof RpcInvocation) {
             ((RpcInvocation) inv).setAttachment(ID_KEY, String.valueOf(INVOKE_ID.getAndIncrement()));
         }
     }
 
+    /**
+     * 是否需要添加调用id
+     * @param url
+     * @param invocation
+     * @return
+     */
     private static boolean isAttachInvocationId(URL url, Invocation invocation) {
+        //是否需要自动添加调用id
         String value = url.getMethodParameter(invocation.getMethodName(), AUTO_ATTACH_INVOCATIONID_KEY);
         if (value == null) {
+            //根据是不是异步调用返回是否需要添加调用id
             // add invocationid in async operation by default
             return isAsync(url, invocation);
+        //根据配置返回需要添加
         } else if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
             return true;
+        //根据配置返回不需要添加
         } else {
             return false;
         }
@@ -164,6 +177,12 @@ public class RpcUtils {
         return invocation.getParameterTypes();
     }
 
+    /**
+     * 是否是异步调用
+     * @param url
+     * @param inv
+     * @return
+     */
     public static boolean isAsync(URL url, Invocation inv) {
         boolean isAsync;
         if (Boolean.TRUE.toString().equals(inv.getAttachment(ASYNC_KEY))) {

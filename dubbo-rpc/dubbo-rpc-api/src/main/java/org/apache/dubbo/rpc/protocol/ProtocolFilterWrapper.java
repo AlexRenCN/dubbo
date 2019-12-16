@@ -37,7 +37,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.REFERENCE_FILTER
 import static org.apache.dubbo.common.constants.CommonConstants.SERVICE_FILTER_KEY;
 
 /**
- * 过滤器暴露
+ * 过滤器链包装类
  * ListenerProtocol
  */
 public class ProtocolFilterWrapper implements Protocol {
@@ -68,6 +68,7 @@ public class ProtocolFilterWrapper implements Protocol {
         if (!filters.isEmpty()) {
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final Filter filter = filters.get(i);
+                //最后一个last执行器将会是协议的执行器
                 final Invoker<T> next = last;
                 //将过滤器Filter转换为执行器Invoker
                 last = new Invoker<T>() {
