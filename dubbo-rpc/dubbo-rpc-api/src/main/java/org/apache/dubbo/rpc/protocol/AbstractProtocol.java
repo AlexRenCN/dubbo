@@ -53,6 +53,7 @@ public abstract class AbstractProtocol implements Protocol {
     protected final Map<String, Exporter<?>> exporterMap = new ConcurrentHashMap<String, Exporter<?>>();
 
     /**
+     * 服务器地址，端口 和服务的映射
      * <host:port, ProtocolServer>
      */
     protected final Map<String, ProtocolServer> serverMap = new ConcurrentHashMap<>();
@@ -60,6 +61,11 @@ public abstract class AbstractProtocol implements Protocol {
     //TODO SoftReference
     protected final Set<Invoker<?>> invokers = new ConcurrentHashSet<Invoker<?>>();
 
+    /**
+     * 构建服务key
+     * @param url
+     * @return
+     */
     protected static String serviceKey(URL url) {
         int port = url.getParameter(Constants.BIND_PORT_KEY, url.getPort());
         return serviceKey(port, url.getPath(), url.getParameter(VERSION_KEY), url.getParameter(GROUP_KEY));

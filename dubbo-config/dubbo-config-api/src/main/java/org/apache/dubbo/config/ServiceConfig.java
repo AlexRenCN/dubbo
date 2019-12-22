@@ -580,12 +580,12 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
                         if (LOCAL_PROTOCOL.equalsIgnoreCase(url.getProtocol())) {
                             continue;
                         }
-                        //构建需要注册的URL
+                        //是否采用动态注册，动态注册的服务再注册之后需要手动的开启，下线之后也需要手动的关闭
                         url = url.addParameterIfAbsent(DYNAMIC_KEY, registryURL.getParameter(DYNAMIC_KEY));
-                        //构建需要注册的监听器
+                        //获取监控中心地址
                         URL monitorUrl = ConfigValidationUtils.loadMonitor(this, registryURL);
                         if (monitorUrl != null) {
-                            //将监听器填充给URL对象
+                            //将监听中心填充给URL对象
                             url = url.addParameterAndEncoded(MONITOR_KEY, monitorUrl.toFullString());
                         }
                         if (logger.isInfoEnabled()) {
@@ -616,7 +616,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
                         exporters.add(exporter);
                     }
                 } else {
-                    //没有需要暴露的URL
+                    //没有需要对外暴露的URL，比如消费者直连生产者
                     if (logger.isInfoEnabled()) {
                         logger.info("Export dubbo service " + interfaceClass.getName() + " to url " + url);
                     }

@@ -372,7 +372,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
                     List<URL> us = ConfigValidationUtils.loadRegistries(this, false);
                     if (CollectionUtils.isNotEmpty(us)) {
                         for (URL u : us) {
-                            //获取监控中心的URL地址
+                            //获取监控中心地址
                             URL monitorUrl = ConfigValidationUtils.loadMonitor(this, u);
                             if (monitorUrl != null) {
                                 map.put(MONITOR_KEY, URL.encode(monitorUrl.toFullString()));

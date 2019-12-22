@@ -88,6 +88,7 @@ import static org.apache.dubbo.rpc.protocol.dubbo.Constants.SHARE_CONNECTIONS_KE
 
 
 /**
+ * dubbo 协议支持
  * dubbo protocol support.
  */
 public class DubboProtocol extends AbstractProtocol {
@@ -277,10 +278,18 @@ public class DubboProtocol extends AbstractProtocol {
         return DEFAULT_PORT;
     }
 
+    /**
+     * Dubbo 服务导出
+     * @param invoker Service invoker
+     * @param <T>
+     * @return
+     * @throws RpcException
+     */
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
         URL url = invoker.getUrl();
 
+        //构建服务key
         // export service.
         String key = serviceKey(url);
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
@@ -302,39 +311,58 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
 
+        //启动服务器
         openServer(url);
+        //初始化序列化优化器
         optimizeSerialization(url);
 
         return exporter;
     }
 
+    /**
+     * 启动服务器
+     * @param url
+     */
     private void openServer(URL url) {
+
         // find server.
         String key = url.getAddress();
+        //客户端可以导出只供服务器调用的服务
         //client can export a service which's only for server to invoke
         boolean isServer = url.getParameter(IS_SERVER_KEY, true);
         if (isServer) {
+            //查看是否已经导出过
             ProtocolServer server = serverMap.get(key);
             if (server == null) {
                 synchronized (this) {
                     server = serverMap.get(key);
                     if (server == null) {
+                        //创建并绑定服务
                         serverMap.put(key, createServer(url));
                     }
                 }
             } else {
+                //重置URL
                 // server supports reset, use together with override
                 server.reset(url);
             }
         }
     }
 
+    /**
+     * 创建服务
+     * @param url
+     * @return
+     */
     private ProtocolServer createServer(URL url) {
         url = URLBuilder.from(url)
+                //服务器关闭时发送只读事件，默认情况下启用
                 // send readonly event when server closes, it's enabled by default
                 .addParameterIfAbsent(CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString())
+                //默认情况下启用心跳
                 // enable heartbeat by default
                 .addParameterIfAbsent(HEARTBEAT_KEY, String.valueOf(DEFAULT_HEARTBEAT))
+                //解码器
                 .addParameter(CODEC_KEY, DubboCodec.NAME)
                 .build();
         String str = url.getParameter(SERVER_KEY, DEFAULT_REMOTING_SERVER);
@@ -345,11 +373,13 @@ public class DubboProtocol extends AbstractProtocol {
 
         ExchangeServer server;
         try {
+            //启动服务器
             server = Exchangers.bind(url, requestHandler);
         } catch (RemotingException e) {
             throw new RpcException("Fail to start server(url: " + url + ") " + e.getMessage(), e);
         }
 
+        //检查服务器key是否存在
         str = url.getParameter(CLIENT_KEY);
         if (str != null && str.length() > 0) {
             Set<String> supportedTypes = ExtensionLoader.getExtensionLoader(Transporter.class).getSupportedExtensions();

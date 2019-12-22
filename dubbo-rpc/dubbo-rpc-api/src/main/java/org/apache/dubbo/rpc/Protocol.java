@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 协议
  * TODO 【dubbo域】提供服务的主题内容，管理Invoker的声明周期，属于服务域
  * Protocol. (API/SPI, Singleton, ThreadSafe)
  */

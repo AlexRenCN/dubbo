@@ -21,6 +21,7 @@ import org.apache.dubbo.common.extension.Adaptive;
 import org.apache.dubbo.common.extension.SPI;
 
 /**
+ * 注册中心工厂
  * RegistryFactory. (SPI, Singleton, ThreadSafe)
  *
  * @see org.apache.dubbo.registry.support.AbstractRegistryFactory
@@ -29,6 +30,7 @@ import org.apache.dubbo.common.extension.SPI;
 public interface RegistryFactory {
 
     /**
+     * 根据URL获取注册中心
      * Connect to the registry
      * <p>
      * Connecting the registry needs to support the contract: <br>

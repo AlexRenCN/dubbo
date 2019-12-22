@@ -221,7 +221,7 @@ public class ConfigValidationUtils {
     }
 
     /**
-     * 解析监控中心的URL
+     * 获取监控中心地址
      * @param interfaceConfig
      * @param registryURL
      * @return
@@ -270,7 +270,7 @@ public class ConfigValidationUtils {
             }
             //转换成URL对象
             return UrlUtils.parseURL(address, map);
-        //如果没有找到监控中心的地址，这可能是一个注册中心或者服务发现中心
+        //如果没有找到监控中心的地址，这可能是一个注册中心或者服务发现中心，从中获取监控中心
         } else if ((REGISTRY_PROTOCOL.equals(monitor.getProtocol()) || SERVICE_REGISTRY_PROTOCOL.equals(monitor.getProtocol()))
                 && registryURL != null) {
             //转换成URL对象
