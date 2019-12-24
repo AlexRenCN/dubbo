@@ -39,14 +39,26 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
     protected int DEFAULT_CONNECTION_TIMEOUT_MS = 5 * 1000;
     protected int DEFAULT_SESSION_TIMEOUT_MS = 60 * 1000;
 
+    /**
+     * 注册中心URL
+     */
     private final URL url;
 
+    /**
+     * zookeeper状态变更监听器
+     */
     private final Set<StateListener> stateListeners = new CopyOnWriteArraySet<StateListener>();
 
+    /**
+     * 节点变更监听器
+     */
     private final ConcurrentMap<String, ConcurrentMap<ChildListener, TargetChildListener>> childListeners = new ConcurrentHashMap<String, ConcurrentMap<ChildListener, TargetChildListener>>();
 
     private final ConcurrentMap<String, ConcurrentMap<DataListener, TargetDataListener>> listeners = new ConcurrentHashMap<String, ConcurrentMap<DataListener, TargetDataListener>>();
 
+    /**
+     * 关闭标识
+     */
     private volatile boolean closed = false;
 
     private final Set<String>  persistentExistNodePath = new ConcurrentHashSet<>();
@@ -70,23 +82,32 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
 
     @Override
     public void create(String path, boolean ephemeral) {
+        //如果是永久节点
         if (!ephemeral) {
+            //检查是否已经有临时节点，如果有就直接返回
             if(persistentExistNodePath.contains(path)){
                 return;
             }
+            //检查zookeeper里是否存在永久节点，如果有就在本地同步一份数据，并直接返回
             if (checkExists(path)) {
                 persistentExistNodePath.add(path);
                 return;
             }
         }
+        //按'/'切分路径
         int i = path.lastIndexOf('/');
         if (i > 0) {
+            //递归创建节点
             create(path.substring(0, i), false);
         }
+        //如果是临时节点
         if (ephemeral) {
+            //在zookeeper里创建临时节点
             createEphemeral(path);
         } else {
+            //在zookeeper里创建永久节点
             createPersistent(path);
+            //在本地缓存创建的永久节点
             persistentExistNodePath.add(path);
         }
     }
@@ -107,16 +128,22 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
 
     @Override
     public List<String> addChildListener(String path, final ChildListener listener) {
+        //根据路径获取节点变更监听器
         ConcurrentMap<ChildListener, TargetChildListener> listeners = childListeners.get(path);
         if (listeners == null) {
+            //添加监听器
             childListeners.putIfAbsent(path, new ConcurrentHashMap<ChildListener, TargetChildListener>());
+            //获取最新的监听器
             listeners = childListeners.get(path);
         }
+        //判断是否有监听器
         TargetChildListener targetListener = listeners.get(listener);
         if (targetListener == null) {
+            //如果没有监听器就创建一个新的监听器
             listeners.putIfAbsent(listener, createTargetChildListener(path, listener));
             targetListener = listeners.get(listener);
         }
+        //向zookeeper的对应路径发起订阅
         return addTargetChildListener(path, targetListener);
     }
 
@@ -170,11 +197,14 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
 
     @Override
     public void close() {
+        //如果已经关闭，直接返回
         if (closed) {
             return;
         }
+        //修改状态为已关闭
         closed = true;
         try {
+            //关闭zookeeper连接
             doClose();
         } catch (Throwable t) {
             logger.warn(t.getMessage(), t);
@@ -205,10 +235,21 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
         return doGetContent(path);
     }
 
+    /**
+     * 关闭zookeeper连接
+     */
     protected abstract void doClose();
 
+    /**
+     * 创建永久节点
+     * @param path
+     */
     protected abstract void createPersistent(String path);
 
+    /**
+     * 创建临时节点
+     * @param path
+     */
     protected abstract void createEphemeral(String path);
 
     protected abstract void createPersistent(String path, String data);
@@ -217,6 +258,12 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
 
     protected abstract boolean checkExists(String path);
 
+    /**
+     * 创建节点变化监听器
+     * @param path
+     * @param listener
+     * @return
+     */
     protected abstract TargetChildListener createTargetChildListener(String path, ChildListener listener);
 
     protected abstract List<String> addTargetChildListener(String path, TargetChildListener listener);

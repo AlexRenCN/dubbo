@@ -49,6 +49,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.apache.dubbo.common.constants.CommonConstants.TIMEOUT_KEY;
 
+/**
+ * 使用Apache Curator链接zookeeper客户端
+ */
 public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZookeeperClient.CuratorWatcherImpl, CuratorZookeeperClient.CuratorWatcherImpl> {
 
     protected static final Logger logger = LoggerFactory.getLogger(CuratorZookeeperClient.class);
@@ -61,22 +64,33 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
     public CuratorZookeeperClient(URL url) {
         super(url);
         try {
+            //设置超时时间
             int timeout = url.getParameter(TIMEOUT_KEY, DEFAULT_CONNECTION_TIMEOUT_MS);
+            //设置会话过期时间
             int sessionExpireMs = url.getParameter(ZK_SESSION_EXPIRE_KEY, DEFAULT_SESSION_TIMEOUT_MS);
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                    //链接地址
                     .connectString(url.getBackupAddress())
+                    //重试策略
                     .retryPolicy(new RetryNTimes(1, 1000))
+                    //超时时间
                     .connectionTimeoutMs(timeout)
+                    //会话过期时间
                     .sessionTimeoutMs(sessionExpireMs);
             String authority = url.getAuthority();
+            //认证信息（账号密码）
             if (authority != null && authority.length() > 0) {
                 builder = builder.authorization("digest", authority.getBytes());
             }
             client = builder.build();
+            //添加zookeeper节点变化监听器
             client.getConnectionStateListenable().addListener(new CuratorConnectionStateListener(url));
+            //开启客户端
             client.start();
+            //尝试开启连接
             boolean connected = client.blockUntilConnected(timeout, TimeUnit.MILLISECONDS);
             if (!connected) {
+                //如果开启失败则抛出异常
                 throw new IllegalStateException("zookeeper not connected");
             }
         } catch (Exception e) {
@@ -338,6 +352,9 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
         }
     }
 
+    /**
+     * 基于Curator链接的zookeeper链接状态变更监听器
+     */
     private class CuratorConnectionStateListener implements ConnectionStateListener {
         private final long UNKNOWN_SESSION_ID = -1L;
 
@@ -350,36 +367,50 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
 
         @Override
         public void stateChanged(CuratorFramework client, ConnectionState state) {
+            //超时时间
             int timeout = url.getParameter(TIMEOUT_KEY, DEFAULT_CONNECTION_TIMEOUT_MS);
+            //会话失效时间
             int sessionExpireMs = url.getParameter(ZK_SESSION_EXPIRE_KEY, DEFAULT_SESSION_TIMEOUT_MS);
 
+            //会话id
             long sessionId = UNKNOWN_SESSION_ID;
             try {
+                //替换成zookeeper的会话id
                 sessionId = client.getZookeeperClient().getZooKeeper().getSessionId();
             } catch (Exception e) {
                 logger.warn("Curator client state changed, but failed to get the related zk session instance.");
             }
 
+            //zookeeper客户端断开连接
             if (state == ConnectionState.LOST) {
                 logger.warn("Curator zookeeper session " + Long.toHexString(lastSessionId) + " expired.");
+                //设置状态为断开连接
                 CuratorZookeeperClient.this.stateChanged(StateListener.SESSION_LOST);
+            //zookeeper客户端已暂停
             } else if (state == ConnectionState.SUSPENDED) {
                 logger.warn("Curator zookeeper connection of session " + Long.toHexString(sessionId) + " timed out. " +
                         "connection timeout value is " + timeout + ", session expire timeout value is " + sessionExpireMs);
+                //设置状态为已暂停
                 CuratorZookeeperClient.this.stateChanged(StateListener.SUSPENDED);
+            //zookeeper客户端链接
             } else if (state == ConnectionState.CONNECTED) {
                 lastSessionId = sessionId;
                 logger.info("Curator zookeeper client instance initiated successfully, session id is " + Long.toHexString(sessionId));
+                //设置状态为链接
                 CuratorZookeeperClient.this.stateChanged(StateListener.CONNECTED);
+            //zookeeper客户端重连
             } else if (state == ConnectionState.RECONNECTED) {
+                //比较新会话id和旧会话id
                 if (lastSessionId == sessionId && sessionId != UNKNOWN_SESSION_ID) {
                     logger.warn("Curator zookeeper connection recovered from connection lose, " +
                             "reuse the old session " + Long.toHexString(sessionId));
+                    //使用了一个会话id，设置状态为重连
                     CuratorZookeeperClient.this.stateChanged(StateListener.RECONNECTED);
                 } else {
                     logger.warn("New session created after old session lost, " +
                             "old session " + Long.toHexString(lastSessionId) + ", new session " + Long.toHexString(sessionId));
                     lastSessionId = sessionId;
+                    //领到一个新的会话id,设置状态为新连接
                     CuratorZookeeperClient.this.stateChanged(StateListener.NEW_SESSION_CREATED);
                 }
             }

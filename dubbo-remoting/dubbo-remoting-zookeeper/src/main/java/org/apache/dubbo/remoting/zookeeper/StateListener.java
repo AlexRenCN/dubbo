@@ -16,18 +16,40 @@
  */
 package org.apache.dubbo.remoting.zookeeper;
 
+/**
+ * TODO  【dubbo】 zookeeper状态
+ */
 public interface StateListener {
 
+    /**
+     * 已断开
+     */
     int SESSION_LOST = 0;
 
+    /**
+     * 已连接
+     */
     int CONNECTED = 1;
 
+    /**
+     * 已重连
+     */
     int RECONNECTED = 2;
 
+    /**
+     * 已暂停
+     */
     int SUSPENDED = 3;
 
+    /**
+     * 创建新会话
+     */
     int NEW_SESSION_CREATED = 4;
 
+    /**
+     * zookeeper状态变更修改函数
+     * @param connected
+     */
     void stateChanged(int connected);
 
 }

@@ -23,12 +23,32 @@ import java.util.concurrent.Executor;
 
 public interface ZookeeperClient {
 
+    /**
+     * 创建节点
+     * @param path
+     * @param ephemeral 是否是临时节点
+     */
     void create(String path, boolean ephemeral);
 
+    /**
+     * 删除节点
+     * @param path
+     */
     void delete(String path);
 
+    /**
+     * 获取子节点
+     * @param path
+     * @return
+     */
     List<String> getChildren(String path);
 
+    /**
+     * 添加子节点变更监听器
+     * @param path
+     * @param listener
+     * @return
+     */
     List<String> addChildListener(String path, ChildListener listener);
 
     /**
@@ -46,10 +66,23 @@ public interface ZookeeperClient {
 
     void removeDataListener(String path, DataListener listener);
 
+    /**
+     * 删除子节点变更监听器
+     * @param path
+     * @param listener
+     */
     void removeChildListener(String path, ChildListener listener);
 
+    /**
+     * 添加zookeeper状态变更监听器
+     * @param listener
+     */
     void addStateListener(StateListener listener);
 
+    /**
+     * 移除zookeeper状态变更监听器
+     * @param listener
+     */
     void removeStateListener(StateListener listener);
 
     boolean isConnected();

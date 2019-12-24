@@ -20,6 +20,11 @@ import java.util.List;
 
 public interface ChildListener {
 
+    /**
+     * zookeeper节点变更回调函数
+     * @param path
+     * @param children
+     */
     void childChanged(String path, List<String> children);
 
 }
