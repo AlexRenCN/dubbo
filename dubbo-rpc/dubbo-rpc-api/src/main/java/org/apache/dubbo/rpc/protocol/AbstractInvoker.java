@@ -45,20 +45,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * 默认调用器
  * AbstractInvoker.
  */
 public abstract class AbstractInvoker<T> implements Invoker<T> {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 接口类型
+     */
     private final Class<T> type;
 
+    /**
+     * 服务URL地址
+     */
     private final URL url;
 
+    /**
+     * 附带参数
+     */
     private final Map<String, Object> attachment;
 
+    /**
+     * 是否可用
+     */
     private volatile boolean available = true;
 
+    /**
+     * 是否销毁
+     */
     private AtomicBoolean destroyed = new AtomicBoolean(false);
 
     public AbstractInvoker(Class<T> type, URL url) {

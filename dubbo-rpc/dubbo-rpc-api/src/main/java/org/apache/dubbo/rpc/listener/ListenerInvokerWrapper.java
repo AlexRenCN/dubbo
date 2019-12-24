@@ -29,6 +29,7 @@ import org.apache.dubbo.rpc.RpcException;
 import java.util.List;
 
 /**
+ * 带有监听器功能的调用器
  * ListenerInvoker
  */
 public class ListenerInvokerWrapper<T> implements Invoker<T> {
@@ -45,10 +46,12 @@ public class ListenerInvokerWrapper<T> implements Invoker<T> {
         }
         this.invoker = invoker;
         this.listeners = listeners;
+        //如果有监听器
         if (CollectionUtils.isNotEmpty(listeners)) {
             for (InvokerListener listener : listeners) {
                 if (listener != null) {
                     try {
+                        //启动每一个监听器
                         listener.referred(invoker);
                     } catch (Throwable t) {
                         logger.error(t.getMessage(), t);
@@ -88,10 +91,12 @@ public class ListenerInvokerWrapper<T> implements Invoker<T> {
         try {
             invoker.destroy();
         } finally {
+            //如果有监听器
             if (CollectionUtils.isNotEmpty(listeners)) {
                 for (InvokerListener listener : listeners) {
                     if (listener != null) {
                         try {
+                            //关闭每一个监听器
                             listener.destroyed(invoker);
                         } catch (Throwable t) {
                             logger.error(t.getMessage(), t);

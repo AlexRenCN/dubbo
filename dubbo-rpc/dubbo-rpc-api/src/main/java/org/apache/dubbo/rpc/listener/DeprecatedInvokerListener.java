@@ -25,6 +25,7 @@ import org.apache.dubbo.rpc.RpcException;
 import static org.apache.dubbo.rpc.Constants.DEPRECATED_KEY;
 
 /**
+ * 引用废弃服务时打印异常日志
  * DeprecatedProtocolFilter
  */
 @Activate(DEPRECATED_KEY)

@@ -162,9 +162,12 @@ public class ProtocolFilterWrapper implements Protocol {
 
     @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+        //如果这是一个注册中心
         if (UrlUtils.isRegistry(url)) {
+            //直接引用这个注册中心
             return protocol.refer(type, url);
         }
+        //引用服务，返回invoker调用者
         return buildInvokerChain(protocol.refer(type, url), REFERENCE_FILTER_KEY, CommonConstants.CONSUMER);
     }
 
