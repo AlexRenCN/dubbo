@@ -77,24 +77,37 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
     @Override
     protected Result doInvoke(final Invocation invocation) throws Throwable {
         RpcInvocation inv = (RpcInvocation) invocation;
+        //获取方法名
         final String methodName = RpcUtils.getMethodName(invocation);
+        //设置地址
         inv.setAttachment(PATH_KEY, getUrl().getPath());
+        //设置版本号
         inv.setAttachment(VERSION_KEY, version);
 
+        //选择调用的客户端
         ExchangeClient currentClient;
         if (clients.length == 1) {
+            //只有一个就使用它
             currentClient = clients[0];
         } else {
+            //采用轮询方式选择需要调用的客户端
             currentClient = clients[index.getAndIncrement() % clients.length];
         }
         try {
+            //是不是单向调用（类似于UDP的思路，只发送请求而不获取结果）
             boolean isOneway = RpcUtils.isOneway(getUrl(), invocation);
+            //获取超时时间
             int timeout = getUrl().getMethodPositiveParameter(methodName, TIMEOUT_KEY, DEFAULT_TIMEOUT);
+            //如果是单向调用
             if (isOneway) {
+                //是否需要等待消息发出
                 boolean isSent = getUrl().getMethodParameter(methodName, Constants.SENT_KEY, false);
+                //发送请求
                 currentClient.send(inv, isSent);
+                //返回默认的调用结果，结果的返回值是null
                 return AsyncRpcResult.newDefaultAsyncResult(invocation);
             } else {
+                //查看是同步还是异步调用，并获取对应的请求线程池
                 ExecutorService executor = getCallbackExecutor(getUrl(), inv);
                 CompletableFuture<AppResponse> appResponseFuture =
                         currentClient.request(inv, timeout, executor).thenApply(obj -> (AppResponse) obj);

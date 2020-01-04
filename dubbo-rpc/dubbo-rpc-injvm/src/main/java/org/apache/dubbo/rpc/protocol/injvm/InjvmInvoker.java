@@ -55,10 +55,12 @@ class InjvmInvoker<T> extends AbstractInvoker<T> {
 
     @Override
     public Result doInvoke(Invocation invocation) throws Throwable {
+        //获取服务暴露工具
         Exporter<?> exporter = InjvmProtocol.getExporter(exporterMap, getUrl());
         if (exporter == null) {
             throw new RpcException("Service [" + key + "] not found.");
         }
+        //设置调用地址为本机地址
         RpcContext.getContext().setRemoteAddress(LOCALHOST_VALUE, 0);
         return exporter.getInvoker().invoke(invocation);
     }

@@ -448,14 +448,14 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             if (logger.isInfoEnabled()) {
                 logger.info("Recover register url " + recoverRegistered);
             }
-            //遍历添加为失败的URL，覆盖时重新注册
             for (URL url : recoverRegistered) {
+                //重新注册URL
                 addFailedRegistered(url);
             }
         }
         //订阅
         // subscribe
-        //获取已经订阅的URL
+        //获取URL变更订阅器
         Map<URL, Set<NotifyListener>> recoverSubscribed = new HashMap<URL, Set<NotifyListener>>(getSubscribed());
         if (!recoverSubscribed.isEmpty()) {
             if (logger.isInfoEnabled()) {
@@ -464,7 +464,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             for (Map.Entry<URL, Set<NotifyListener>> entry : recoverSubscribed.entrySet()) {
                 URL url = entry.getKey();
                 for (NotifyListener listener : entry.getValue()) {
-                    //遍历添加为失败的URL，覆盖时重新订阅
+                    //重新注册URL变更订阅器
                     addFailedSubscribed(url, listener);
                 }
             }

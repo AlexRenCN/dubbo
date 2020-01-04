@@ -184,6 +184,10 @@ public abstract class AbstractRegistry implements Registry {
         return Collections.unmodifiableSet(registered);
     }
 
+    /**
+     * 获取URL变更订阅器
+     * @return
+     */
     public Map<URL, Set<NotifyListener>> getSubscribed() {
         return Collections.unmodifiableMap(subscribed);
     }

@@ -73,6 +73,7 @@ import static org.apache.dubbo.registry.Constants.SESSION_TIMEOUT_KEY;
 import static org.apache.dubbo.registry.Constants.UNREGISTER;
 
 /**
+ * redis注册中心
  * RedisRegistry
  */
 public class RedisRegistry extends FailbackRegistry {

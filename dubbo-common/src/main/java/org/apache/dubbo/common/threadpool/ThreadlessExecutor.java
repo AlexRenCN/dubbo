@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * 这个执行器和其他普通执行器之间最重要的区别是，这个执行器不管理任何线程。
  * The most important difference between this Executor and other normal Executor is that this one doesn't manage
  * any thread.
  *

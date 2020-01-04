@@ -218,6 +218,12 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
         return asyncResult;
     }
 
+    /**
+     * 查看是同步还是异步调用，并获取对应的请求线程池
+     * @param url
+     * @param inv
+     * @return
+     */
     protected ExecutorService getCallbackExecutor(URL url, Invocation inv) {
         ExecutorService sharedExecutor = ExtensionLoader.getExtensionLoader(ExecutorRepository.class).getDefaultExtension().getExecutor(url);
         if (InvokeMode.SYNC == RpcUtils.getInvokeMode(getUrl(), inv)) {

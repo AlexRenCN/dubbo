@@ -227,6 +227,7 @@ public class RpcUtils {
 
     public static boolean isOneway(URL url, Invocation inv) {
         boolean isOneway;
+        //如果不需要返回值，属于单向请求
         if (Boolean.FALSE.toString().equals(inv.getAttachment(RETURN_KEY))) {
             isOneway = true;
         } else {
