@@ -44,10 +44,14 @@ import static org.apache.dubbo.common.constants.CommonConstants.ANYHOST_KEY;
 import static org.apache.dubbo.common.constants.CommonConstants.ANYHOST_VALUE;
 
 /**
+ * 请求协议抽象类
  * AbstractProxyProtocol
  */
 public abstract class AbstractProxyProtocol extends AbstractProtocol {
 
+    /**
+     * 需要抛出的调用异常
+     */
     private final List<Class<?>> rpcExceptions = new CopyOnWriteArrayList<Class<?>>();
 
     protected ProxyFactory proxyFactory;
@@ -76,22 +80,28 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Exporter<T> export(final Invoker<T> invoker) throws RpcException {
+        //获取服务URL
         final String uri = serviceKey(invoker.getUrl());
         Exporter<T> exporter = (Exporter<T>) exporterMap.get(uri);
         if (exporter != null) {
+            //检查URL是否重写过
             // When modifying the configuration through override, you need to re-expose the newly modified service.
             if (Objects.equals(exporter.getInvoker().getUrl(), invoker.getUrl())) {
+                //从缓存里取出，直接返回
                 return exporter;
             }
         }
+        //如法从缓存里取出，使用代理工厂、接口、URL为参数创建一个新的Exporter
         final Runnable runnable = doExport(proxyFactory.getProxy(invoker, true), invoker.getInterface(), invoker.getUrl());
         exporter = new AbstractExporter<T>(invoker) {
             @Override
             public void unexport() {
                 super.unexport();
+                //从缓存中移除
                 exporterMap.remove(uri);
                 if (runnable != null) {
                     try {
+                        //再暴露出去
                         runnable.run();
                     } catch (Throwable t) {
                         logger.warn(t.getMessage(), t);
@@ -99,12 +109,14 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
                 }
             }
         };
+        //放到缓存里
         exporterMap.put(uri, exporter);
         return exporter;
     }
 
     @Override
     protected <T> Invoker<T> protocolBindingRefer(final Class<T> type, final URL url) throws RpcException {
+        //获取Invoker
         final Invoker<T> target = proxyFactory.getInvoker(doRefer(type, url), type, url);
         Invoker<T> invoker = new AbstractInvoker<T>(type, url) {
             @Override
@@ -113,6 +125,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
                     Result result = target.invoke(invocation);
                     // FIXME result is an AsyncRpcResult instance.
                     Throwable e = result.getException();
+                    //检查远程调用的异常能否与本地指定异常匹配
                     if (e != null) {
                         for (Class<?> rpcException : rpcExceptions) {
                             if (rpcException.isAssignableFrom(e.getClass())) {
@@ -131,6 +144,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
                 }
             }
         };
+        //添加到服务引用的缓存中
         invokers.add(invoker);
         return invoker;
     }
@@ -142,11 +156,18 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
         return re;
     }
 
+    /**
+     * 获取服务器地址
+     * @param url
+     * @return
+     */
     protected String getAddr(URL url) {
+        //获取绑定ip
         String bindIp = url.getParameter(Constants.BIND_IP_KEY, url.getHost());
         if (url.getParameter(ANYHOST_KEY, false)) {
             bindIp = ANYHOST_VALUE;
         }
+        //追加端口
         return NetUtils.getIpByHost(bindIp) + ":" + url.getParameter(Constants.BIND_PORT_KEY, url.getPort());
     }
 

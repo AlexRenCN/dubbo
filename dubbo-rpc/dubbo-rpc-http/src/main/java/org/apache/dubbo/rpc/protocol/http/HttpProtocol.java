@@ -46,6 +46,9 @@ public class HttpProtocol extends AbstractProxyProtocol {
     public static final String ACCESS_CONTROL_ALLOW_METHODS_HEADER = "Access-Control-Allow-Methods";
     public static final String ACCESS_CONTROL_ALLOW_HEADERS_HEADER = "Access-Control-Allow-Headers";
 
+    /**
+     * HTTP服务器  json-rpc服务端
+     */
     private final Map<String, JsonRpcServer> skeletonMap = new ConcurrentHashMap<>();
 
     private HttpBinder httpBinder;
@@ -58,13 +61,23 @@ public class HttpProtocol extends AbstractProxyProtocol {
         this.httpBinder = httpBinder;
     }
 
+    /**
+     * 默认服务端口80
+     * @return
+     */
     @Override
     public int getDefaultPort() {
         return 80;
     }
 
+    /**
+     * Http处理器
+     */
     private class InternalHandler implements HttpHandler {
 
+        /**
+         * 是否跨域
+         */
         private boolean cors;
 
         public InternalHandler(boolean cors) {
@@ -74,19 +87,27 @@ public class HttpProtocol extends AbstractProxyProtocol {
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException {
+            //获取URL
             String uri = request.getRequestURI();
+            //根据URL从缓存中获取服务器
             JsonRpcServer skeleton = skeletonMap.get(uri);
+            //跨域处理
             if (cors) {
                 response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
                 response.setHeader(ACCESS_CONTROL_ALLOW_METHODS_HEADER, "POST");
                 response.setHeader(ACCESS_CONTROL_ALLOW_HEADERS_HEADER, "*");
             }
+            //OPTIONS：
+            //1.获取服务器支持的HTTP请求方法
+            //2.用来检查服务器的性能
             if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
                 response.setStatus(200);
             } else if ("POST".equalsIgnoreCase(request.getMethod())) {
 
+                //设置ip端口
                 RpcContext.getContext().setRemoteAddress(request.getRemoteAddr(), request.getRemotePort());
                 try {
+                    //处理Http请求
                     skeleton.handle(request.getInputStream(), response.getOutputStream());
                 } catch (Throwable e) {
                     throw new ServletException(e);
@@ -100,15 +121,22 @@ public class HttpProtocol extends AbstractProxyProtocol {
 
     @Override
     protected <T> Runnable doExport(final T impl, Class<T> type, URL url) throws RpcException {
+        //获取服务器IP端口
         String addr = getAddr(url);
+        //检查服务器缓存
         ProtocolServer protocolServer = serverMap.get(addr);
         if (protocolServer == null) {
+            //没有缓存就创建一个并放到缓存里，使用Http协议的请求处理器
             RemotingServer remotingServer = httpBinder.bind(url, new InternalHandler(url.getParameter("cors", false)));
             serverMap.put(addr, new ProxyProtocolServer(remotingServer));
         }
+        //处理接口的URL地址
         final String path = url.getAbsolutePath();
+        //构建服务器
         JsonRpcServer skeleton = new JsonRpcServer(impl, type);
+        //缓存服务器
         skeletonMap.put(path, skeleton);
+        //返回取消暴露服务器的Runnable函数
         return () -> skeletonMap.remove(path);
     }
 
@@ -123,16 +151,24 @@ public class HttpProtocol extends AbstractProxyProtocol {
         return (T) jsonProxyFactoryBean.getObject();
     }
 
+    /**
+     * 将异常类型转换成Dubbo异常编码
+     * @param e
+     * @return
+     */
     protected int getErrorCode(Throwable e) {
         if (e instanceof RemoteAccessException) {
             e = e.getCause();
         }
         if (e != null) {
             Class<?> cls = e.getClass();
+            //请求超时
             if (SocketTimeoutException.class.equals(cls)) {
                 return RpcException.TIMEOUT_EXCEPTION;
+            //网络超时
             } else if (IOException.class.isAssignableFrom(cls)) {
                 return RpcException.NETWORK_EXCEPTION;
+            //类型不匹配，序列化异常
             } else if (ClassNotFoundException.class.isAssignableFrom(cls)) {
                 return RpcException.SERIALIZATION_EXCEPTION;
             }
